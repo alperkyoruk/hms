@@ -36,5 +36,23 @@ public class MenuItem {
     @Column(name = "dietary_info")
     private String dietaryInfo;
 
-    @Column(name = "ingre")
+    @Column(name = "ingredients")
+    private String ingredients;
+
+    @Column(name = "caloric_content")
+    private String caloricContent;
+
+    @Column(name = "allergen_info")
+    private String allergenInfo;
+
+    @Column(name = "preparation_time")
+    private String preparationTime;
+
+    @Column(name = "avaliable_time")
+    private String avaliableTime;
+
+    @ManyToOne(targetEntity = RoomServiceOrder.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_service_order_id", referencedColumnName = "id")
+    private RoomServiceOrder roomServiceOrder;
+
 }

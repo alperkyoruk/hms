@@ -39,4 +39,7 @@ public class Room {
     @Column(name = "bed_type")
     private String bedType;
 
+    @ManyToOne(targetEntity = Reservation.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "reservation_id", referencedColumnName = "id")
+    private Reservation reservation;
 }

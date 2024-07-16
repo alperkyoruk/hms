@@ -1,5 +1,6 @@
 package com.alperkyoruk.hms.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -57,4 +59,11 @@ public class Guest {
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private Room room;
 
+    @ManyToOne(targetEntity = Reservation.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "reservation_id", referencedColumnName = "id")
+    private Reservation reservation;
+
+    @OneToMany(mappedBy = "guest")
+    @JsonIgnore
+    private List<RoomServiceOrder> orders;
 }
