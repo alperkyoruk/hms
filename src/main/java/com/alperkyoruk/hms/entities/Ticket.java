@@ -48,5 +48,9 @@ public class Ticket {
     @JoinColumn(name = "guest_id", referencedColumnName = "id")
     private Guest guest;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "staff_id", referencedColumnName = "id")
+    private Staff staff;
+
 
 }

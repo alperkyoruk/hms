@@ -34,6 +34,9 @@ public class Reservation {
     @Column(name = "total_amount")
     private double totalAmount;
 
+    @Column(name = "reservation_number")
+    private String reservationNumber;
+
     @Column(name = "payment_status")
     private String paymentStatus;
 
@@ -43,12 +46,16 @@ public class Reservation {
     @Column(name = "discount_code")
     private String discountCode;
 
-    @OneToMany(mappedBy = "rerservation")
+    @OneToMany(mappedBy = "reservation")
     @JsonIgnore
     private List<Room> rooms;
 
     @OneToMany (mappedBy = "reservation")
     private List<Guest> guests;
+
+
+
+
 
 
 

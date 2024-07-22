@@ -55,4 +55,6 @@ public class MenuItem {
     @JoinColumn(name = "room_service_order_id", referencedColumnName = "id")
     private RoomServiceOrder roomServiceOrder;
 
+    
+
 }

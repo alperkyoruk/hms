@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -21,10 +22,12 @@ public class RoomServiceOrder {
     @Column(name = "id")
     private int id;
 
-    @OneToMany(mappedBy = "room_service_order")
-    private List<MenuItem> items;
+    @OneToMany(mappedBy = "roomServiceOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<MenuItem> menuItems;
 
     private String status;
+
+    private Date orderDate;
 
     private LocalTime estimatedTime;
 
@@ -39,6 +42,10 @@ public class RoomServiceOrder {
     @ManyToOne(targetEntity = Guest.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "guest_id", referencedColumnName = "id")
     private Guest guest;
+
+    @ManyToOne(targetEntity = Room.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id", referencedColumnName = "id")
+    private Room room;
 
 
 }
