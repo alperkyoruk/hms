@@ -18,4 +18,6 @@ public interface FacilityDao extends JpaRepository<Facility, Integer> {
 
     List<Facility> findAllByOpeningHoursBetween(String openingHour, String closingHour);
 
+    List<Facility> findAllByFacilityType(String facilityType);
+
 }

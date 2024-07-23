@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -43,11 +45,15 @@ public class Facility {
     private String location;
 
     @Column(name = "opening_hours")
-    private String openingHours;
+    private LocalTime openingHours;
+
+    @Column(name = "closing_hours")
+    private LocalTime closingHours;
 
     @Column(name = "contact_details")
     private String contactDetails;
 
-    @Column(name = "usage_stats")
-    private String usageStats;
+    @Column(name = "usage_count")
+    private int usageCount;
+
 }
