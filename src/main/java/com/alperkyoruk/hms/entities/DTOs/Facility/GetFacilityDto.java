@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -45,12 +46,10 @@ public class GetFacilityDto {
     }
 
 
-    public List<GetFacilityDto> buildListGetFacilityDto(List<Facility> facilities){
-        List<GetFacilityDto> listGetFacilityDto = new ArrayList<>();
-        for (Facility facility : facilities) {
-            listGetFacilityDto.add(new GetFacilityDto(facility));
-        }
-        return listGetFacilityDto;
+    public List<GetFacilityDto> buildListGetFacilityDto(List<Facility> facilities) {
+        return facilities.stream()
+                .map(GetFacilityDto::new)
+                .collect(Collectors.toList());
     }
 
 

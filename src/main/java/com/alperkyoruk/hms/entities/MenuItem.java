@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -46,10 +48,10 @@ public class MenuItem {
     private String allergenInfo;
 
     @Column(name = "preparation_time")
-    private String preparationTime;
+    private LocalTime preparationTime;
 
     @Column(name = "avaliable_time")
-    private String avaliableTime;
+    private String availableTime;
 
     @ManyToOne(targetEntity = RoomServiceOrder.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "room_service_order_id", referencedColumnName = "id")

@@ -6,10 +6,10 @@ import java.util.List;
 
 public class FacilityMessages {
     public static String FacilityAdded = "Facility added successfully";
-    public static String FacilityNotFound;
-    public static String FacilityDeleted;
-    public static String FacilityUpdated;
-    public static String FacilitiesSuccessfullyBrought;
-    public static String FacilitiesNotFound;
-    public static String FacilitySuccessfullyBrought;
+    public static String FacilityNotFound = "Facility not found";
+    public static String FacilityDeleted = "Facility deleted successfully";
+    public static String FacilityUpdated = "Facility updated successfully";
+    public static String FacilitiesSuccessfullyBrought = "Facilities successfully brought";
+    public static String FacilitiesNotFound = "Facilities not found";
+    public static String FacilitySuccessfullyBrought = "Facility successfully brought";
 }

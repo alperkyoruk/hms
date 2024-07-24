@@ -28,6 +28,9 @@ public class Reservation {
     @Column(name = "end_date")
     private Date endDate;
 
+    @Column(name = "created_at")
+    private Date createdAt;
+
     @Column(name = "status")
     private String status;
 

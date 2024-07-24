@@ -9,6 +9,7 @@ import com.alperkyoruk.hms.entities.DTOs.Facility.GetFacilityDto;
 import com.alperkyoruk.hms.entities.Facility;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -133,9 +134,9 @@ public class FacilityManager implements FacilityService {
     }
 
     @Override
-    public DataResult<List<GetFacilityDto>> getFacilitiesByOpeningHours(String openingHour, String closingHour) {
+    public DataResult<List<GetFacilityDto>> getFacilitiesByOpeningHours(LocalTime openingHour, LocalTime closingHour) {
 
-        var facilityList = facilityDao.findAllByOpeningHoursBetween(openingHour, closingHour);
+        var facilityList = facilityDao.findAllByOpeningHoursBeforeAndClosingHoursAfter(openingHour, closingHour);
 
         if(facilityList.isEmpty()){
             return new ErrorDataResult<>(FacilityMessages.FacilitiesNotFound);
@@ -147,7 +148,15 @@ public class FacilityManager implements FacilityService {
     }
 
     @Override
-    public DataResult<List<GetFacilityDto>> getFacilitiesByPrice(double minPrice, double maxPrice) {
-        return null;
+    public DataResult<List<GetFacilityDto>> getFacilitiesByPriceBefore(double price) {
+        var facilityList = facilityDao.findAllByFacilityPriceBefore(price);
+
+        if(facilityList.isEmpty()){
+            return new ErrorDataResult<>(FacilityMessages.FacilitiesNotFound);
+        }
+
+        List<GetFacilityDto> returnList = new GetFacilityDto().buildListGetFacilityDto(facilityList);
+
+        return new SuccessDataResult<>(returnList, FacilityMessages.FacilitiesSuccessfullyBrought);
     }
 }

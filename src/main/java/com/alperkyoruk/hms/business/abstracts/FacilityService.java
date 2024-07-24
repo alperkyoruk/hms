@@ -5,6 +5,7 @@ import com.alperkyoruk.hms.core.result.Result;
 import com.alperkyoruk.hms.entities.DTOs.Facility.CreateFacilityDto;
 import com.alperkyoruk.hms.entities.DTOs.Facility.GetFacilityDto;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public interface FacilityService {
@@ -23,9 +24,9 @@ public interface FacilityService {
 
     DataResult<List<GetFacilityDto>> getFacilitiesByStatus(String status);
 
-    DataResult<List<GetFacilityDto>> getFacilitiesByOpeningHours(String openingHour, String closingHour);
+    DataResult<List<GetFacilityDto>> getFacilitiesByOpeningHours(LocalTime openingHour, LocalTime closingHour);
 
-    DataResult<List<GetFacilityDto>> getFacilitiesByPrice(double minPrice, double maxPrice);
+    DataResult<List<GetFacilityDto>> getFacilitiesByPriceBefore(double price);
 
 
 
