@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Builder
 @Table(name = "staff")
-public class Staff {
+public class Staff extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -30,9 +30,6 @@ public class Staff {
 
     @Column(name = "phone_number")
     private String phoneNumber;
-
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "position")
     private String position;

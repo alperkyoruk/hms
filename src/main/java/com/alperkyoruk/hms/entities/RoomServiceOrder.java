@@ -37,7 +37,7 @@ public class RoomServiceOrder {
 
     private String comment;
 
-    private String totalPrice;
+    private double totalPrice;
 
     @ManyToOne(targetEntity = Guest.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "guest_id", referencedColumnName = "id")
