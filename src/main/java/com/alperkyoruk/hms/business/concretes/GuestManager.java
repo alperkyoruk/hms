@@ -15,6 +15,7 @@ import java.util.List;
 @Service
 public class GuestManager implements GuestService {
 
+
     private GuestDao guestDao;
     private RoomService roomService;
 
@@ -64,10 +65,10 @@ public class GuestManager implements GuestService {
             return new ErrorResult(GuestMessages.guestNotFound);
         }
 
-        // var room = roomService.getRoomByRoomNumber(getGuestDto.getRoomNumber());
-        // if(room == null){
-        //     return new ErrorResult(GuestMessages.roomNotFound);
-        // }
+        var room = roomService.getRoomByRoomNumber(getGuestDto.getRoomNumber()).getData();
+        if(room == null){
+             return new ErrorResult(GuestMessages.roomNotFound);
+         }
 
 
 
@@ -82,9 +83,9 @@ public class GuestManager implements GuestService {
         guestResponse.setFirstName(getGuestDto.getFirstName() == null ? guestResponse.getFirstName() : getGuestDto.getFirstName());
         guestResponse.setLastName(getGuestDto.getLastName() == null ? guestResponse.getLastName() : getGuestDto.getLastName());
         guestResponse.setDateOfBirth(getGuestDto.getDateOfBirth() == null ? guestResponse.getDateOfBirth() : getGuestDto.getDateOfBirth());
-        // guestResponse.setRoom(room);
+        guestResponse.setRoom(room);
 
-        return null;
+        return new SuccessResult(GuestMessages.guestUpdated);
     }
 
     @Override
@@ -100,7 +101,7 @@ public class GuestManager implements GuestService {
     }
 
     @Override
-    public DataResult<GetGuestDto> getGuestById(int guestId) {
+    public DataResult<GetGuestDto> getById(int guestId) {
         var guest = guestDao.findById(guestId);
 
         if(guest == null){
@@ -162,5 +163,14 @@ public class GuestManager implements GuestService {
         var returnGuest = new GetGuestDto(guest);
 
         return new SuccessDataResult<>(returnGuest, GuestMessages.guestSuccessfullyBrought);
+    }
+    @Override
+    public DataResult<Guest> getGuestById(int id) {
+        var result = guestDao.findById(id);
+        if(result == null){
+            return new ErrorDataResult<>(GuestMessages.guestNotFound);
+        }
+
+        return new SuccessDataResult<>(result,GuestMessages.guestSuccessfullyBrought);
     }
 }

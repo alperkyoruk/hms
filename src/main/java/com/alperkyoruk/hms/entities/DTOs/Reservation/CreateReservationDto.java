@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +27,10 @@ public class CreateReservationDto {
     private String paymentStatus;
 
     private String reservationNotes;
+
+    private List<Integer> roomIds;
+
+    private List<Integer> guestIds;
 
 
 

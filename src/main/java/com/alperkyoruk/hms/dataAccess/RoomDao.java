@@ -17,10 +17,11 @@ public interface RoomDao extends JpaRepository<Room, Integer> {
 
     List<Room> findByRoomPriceBefore(double roomPrice);
 
-    List<Room> findAllByRoomCapacityAfter(int roomCapacity);
+    List<Room> findAllByRoomCapacityGreaterThanEqual(int roomCapacity);
 
     List<Room> findAllByBedType(String bedType);
 
     List<Room> findAllByReservationReservationNumber(String reservationNumber);
+
 
 }

@@ -32,10 +32,10 @@ public class Ticket {
     @Column(name = "category")
     private String category;
 
-    @Column(name = "createdDate")
+    @Column(name = "created_date")
     private Date createdDate;
 
-    @Column(name = "resolvedDate")
+    @Column(name = "resolved_date")
     private Date resolvedDate;
 
     @Column(name = "description")

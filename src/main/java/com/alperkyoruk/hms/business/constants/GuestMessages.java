@@ -12,4 +12,5 @@ public class GuestMessages {
     public static String guestsNotFound;
     public static String guestsSuccessfullyBrought = "All guests brought successfully";
     public static String guestSuccessfullyBrought = "Guest brought successfully";
+    public static String roomNotFound;
 }
