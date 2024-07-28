@@ -11,11 +11,11 @@ public interface RoomDao extends JpaRepository<Room, Integer> {
 
     Room findByRoomNumber(int roomNumber);
 
-    List<Room> findByRoomType(String roomType);
+    List<Room> findAllByRoomType(String roomType);
 
-    List<Room> findByRoomStatus(String roomStatus);
+    List<Room> findAllByRoomStatus(String roomStatus);
 
-    List<Room> findByRoomPriceBefore(double roomPrice);
+    List<Room> findAllByRoomPriceBefore(double roomPrice);
 
     List<Room> findAllByRoomCapacityGreaterThanEqual(int roomCapacity);
 

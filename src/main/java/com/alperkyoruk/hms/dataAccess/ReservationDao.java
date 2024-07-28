@@ -1,6 +1,7 @@
 package com.alperkyoruk.hms.dataAccess;
 
 import com.alperkyoruk.hms.entities.Reservation;
+import com.alperkyoruk.hms.entities.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Date;
@@ -16,6 +17,10 @@ public interface ReservationDao extends JpaRepository<Reservation, Integer> {
     List<Reservation> findAllByStatus(String status);
 
     List<Reservation> findAllByPaymentStatus(String paymentStatus);
+
+    Reservation findByGuestsId(int guestId);
+
+    List<Reservation> findByRoomsId(int roomId);
 
 
 

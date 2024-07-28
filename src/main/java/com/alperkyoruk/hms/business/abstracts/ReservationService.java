@@ -14,7 +14,7 @@ public interface ReservationService {
     Result deleteReservation(int id);
     Result updateReservation(GetReservationDto getReservationDto);
     DataResult<GetReservationDto> getById(int id);
-    DataResult<List<GetReservationDto>> getAllByGuestId(int guestId);
+    DataResult<GetReservationDto> getByGuestId(int guestId);
     DataResult<List<GetReservationDto>> getAllByRoomId(int roomId);
     DataResult<List<GetReservationDto>> getAllByCheckInDate(Date checkInDate);
     DataResult<GetReservationDto> getByReservationNumber(String reservationNumber);

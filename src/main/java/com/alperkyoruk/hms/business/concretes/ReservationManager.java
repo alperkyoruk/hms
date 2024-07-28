@@ -4,10 +4,7 @@ import com.alperkyoruk.hms.business.abstracts.GuestService;
 import com.alperkyoruk.hms.business.abstracts.ReservationService;
 import com.alperkyoruk.hms.business.abstracts.RoomService;
 import com.alperkyoruk.hms.business.constants.ReservationMessages;
-import com.alperkyoruk.hms.core.result.DataResult;
-import com.alperkyoruk.hms.core.result.ErrorResult;
-import com.alperkyoruk.hms.core.result.Result;
-import com.alperkyoruk.hms.core.result.SuccessResult;
+import com.alperkyoruk.hms.core.result.*;
 import com.alperkyoruk.hms.dataAccess.ReservationDao;
 import com.alperkyoruk.hms.entities.DTOs.Reservation.CreateReservationDto;
 import com.alperkyoruk.hms.entities.DTOs.Reservation.GetReservationDto;
@@ -111,42 +108,85 @@ public class ReservationManager implements ReservationService {
 
     @Override
     public DataResult<GetReservationDto> getById(int id) {
-        return null;
+        var reservation = reservationDao.findById(id);
+        if(reservation == null){
+            return new ErrorDataResult<>(ReservationMessages.reservationCannotBeFound);
+        }
+
+        var returnReservation = new GetReservationDto(reservation);
+        return new SuccessDataResult<>(returnReservation, ReservationMessages.reservationSuccessfullyBrought);
     }
 
     @Override
-    public DataResult<List<GetReservationDto>> getAllByGuestId(int guestId) {
-        return null;
+    public DataResult<GetReservationDto> getByGuestId(int guestId) {
+        var reservation = reservationDao.findByGuestsId(guestId);
+        if(reservation == null){
+            return new ErrorDataResult<>(ReservationMessages.reservationCannotBeFound);
+        }
+
+        var returnReservation = new GetReservationDto(reservation);
+        return new SuccessDataResult<>(returnReservation, ReservationMessages.reservationSuccessfullyBrought);
     }
 
     @Override
     public DataResult<List<GetReservationDto>> getAllByRoomId(int roomId) {
-        return null;
+        var reservations = reservationDao.findByRoomsId(roomId);
+        if(reservations == null){
+            return new ErrorDataResult<>(ReservationMessages.reservationCannotBeFound);
+        }
+        var returnList = GetReservationDto.buildListGetReservationDto(reservations);
+        return new SuccessDataResult<>(returnList, ReservationMessages.reservationSuccessfullyBrought);
     }
 
     @Override
     public DataResult<List<GetReservationDto>> getAllByCheckInDate(Date checkInDate) {
-        return null;
+        var reservations = reservationDao.findAllByStartDate(checkInDate);
+        if(reservations == null){
+            return new ErrorDataResult<>(ReservationMessages.reservationCannotBeFound);
+        }
+        var returnList = GetReservationDto.buildListGetReservationDto(reservations);
+        return new SuccessDataResult<>(returnList, ReservationMessages.reservationSuccessfullyBrought);
     }
 
     @Override
     public DataResult<GetReservationDto> getByReservationNumber(String reservationNumber) {
-        return null;
+        var reservation = reservationDao.findByReservationNumber(reservationNumber);
+        if(reservation == null){
+            return new ErrorDataResult<>(ReservationMessages.reservationCannotBeFound);
+        }
+
+        var returnReservation = new GetReservationDto(reservation);
+        return new SuccessDataResult<>(returnReservation, ReservationMessages.reservationSuccessfullyBrought);
     }
 
     @Override
     public DataResult<List<GetReservationDto>> getAllByStatus(String status) {
-        return null;
+        var reservations = reservationDao.findAllByStatus(status);
+        if(reservations == null){
+            return new ErrorDataResult<>(ReservationMessages.reservationCannotBeFound);
+        }
+        var returnList = GetReservationDto.buildListGetReservationDto(reservations);
+        return new SuccessDataResult<>(returnList, ReservationMessages.reservationSuccessfullyBrought);
     }
 
     @Override
     public DataResult<List<GetReservationDto>> getAllByPaymentStatus(String paymentStatus) {
-        return null;
+        var reservations = reservationDao.findAllByPaymentStatus(paymentStatus);
+        if(reservations == null){
+            return new ErrorDataResult<>(ReservationMessages.reservationCannotBeFound);
+        }
+        var returnList = GetReservationDto.buildListGetReservationDto(reservations);
+        return new SuccessDataResult<>(returnList, ReservationMessages.reservationSuccessfullyBrought);
     }
 
     @Override
     public DataResult<List<GetReservationDto>> getAll() {
-        return null;
+        var reservations = reservationDao.findAll();
+        if(reservations.isEmpty()){
+            return new ErrorDataResult<>(ReservationMessages.reservationCannotBeFound);
+        }
+        var returnList = GetReservationDto.buildListGetReservationDto(reservations);
+        return new SuccessDataResult<>(returnList, ReservationMessages.reservationSuccessfullyBrought);
     }
 
     public String createReservationNumber(){
