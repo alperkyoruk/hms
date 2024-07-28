@@ -24,7 +24,6 @@ public class GetStaffDto {
     private String department;
     private String status;
     private Date hireDate;
-    private Set<Role> authorities;
 
     public GetStaffDto(Staff staff){
         this.id = staff.getId();
@@ -36,7 +35,6 @@ public class GetStaffDto {
         this.department = staff.getDepartment();
         this.status = staff.getStatus();
         this.hireDate = staff.getHireDate();
-        this.authorities = staff.getAuthorities();
     }
 
     public List<GetStaffDto> buildListGetStaffDto(List<Staff> staffs){
