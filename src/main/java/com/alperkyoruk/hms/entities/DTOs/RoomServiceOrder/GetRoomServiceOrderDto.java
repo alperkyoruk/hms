@@ -1,6 +1,7 @@
 package com.alperkyoruk.hms.entities.DTOs.RoomServiceOrder;
 
 import com.alperkyoruk.hms.entities.DTOs.Guest.GetGuestDto;
+import com.alperkyoruk.hms.entities.DTOs.MenuItem.GetMenuItemDto;
 import com.alperkyoruk.hms.entities.DTOs.Room.GetRoomDto;
 import com.alperkyoruk.hms.entities.RoomServiceOrder;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class GetRoomServiceOrderDto {
     private double totalPrice;
     private GetRoomDto room;
     private GetGuestDto guest;
+    private List<GetMenuItemDto> menuItems;
 
     public GetRoomServiceOrderDto(RoomServiceOrder roomServiceOrder) {
         this.status = roomServiceOrder.getStatus();
@@ -36,6 +38,7 @@ public class GetRoomServiceOrderDto {
         this.totalPrice = roomServiceOrder.getTotalPrice();
         this.room = new GetRoomDto(roomServiceOrder.getRoom());
         this.guest = new GetGuestDto(roomServiceOrder.getGuest());
+        this.menuItems = GetMenuItemDto.buildListGetMenuItemDto(roomServiceOrder.getMenuItems());
     }
 
     public static List<GetRoomServiceOrderDto> buildListGetRoomServiceOrderDto(List<RoomServiceOrder> roomServiceOrders) {

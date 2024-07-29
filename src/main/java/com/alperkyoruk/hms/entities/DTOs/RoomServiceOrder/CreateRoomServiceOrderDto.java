@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,5 +25,6 @@ public class CreateRoomServiceOrderDto {
     private double totalPrice;
     private int roomId;
     private int guestId;
+    private List<Integer> menuItemIds;
 
 }

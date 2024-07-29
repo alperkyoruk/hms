@@ -14,6 +14,7 @@ import java.util.List;
 @Service
 public class MenuItemManager implements MenuItemService {
 
+
     private MenuItemDao menuItemDao;
 
     @Override
@@ -87,7 +88,7 @@ public class MenuItemManager implements MenuItemService {
     }
 
     @Override
-    public DataResult<GetMenuItemDto> getMenuItemById(int menuItemId) {
+    public DataResult<GetMenuItemDto> getById(int menuItemId) {
         var result = menuItemDao.findById(menuItemId);
 
         if(result == null){
@@ -156,5 +157,15 @@ public class MenuItemManager implements MenuItemService {
 
         List<GetMenuItemDto> returnList = new GetMenuItemDto().buildListGetMenuItemDto(result);
         return new SuccessDataResult<>(returnList, MenuItemMessages.menuItemsSuccessfullyBrought);
+    }
+
+    @Override
+    public DataResult<MenuItem> getMenuItemById(int menuItemId) {
+        var result = menuItemDao.findById(menuItemId);
+        if(result == null){
+            return new ErrorDataResult<>(MenuItemMessages.menuItemNotFound);
+        }
+
+        return new SuccessDataResult<>(result, MenuItemMessages.menuItemSuccessfullyBrought);
     }
 }

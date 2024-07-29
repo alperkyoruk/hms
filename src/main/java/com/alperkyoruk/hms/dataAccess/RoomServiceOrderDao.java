@@ -10,7 +10,7 @@ public interface RoomServiceOrderDao extends JpaRepository<RoomServiceOrder, Int
 
     RoomServiceOrder findById(int id);
 
-    List<RoomServiceOrder> findAllByRoomId(int roomId);
+    List<RoomServiceOrder> findAllByRoomRoomNumber(int room);
 
     List<RoomServiceOrder> findAllByStatus(String status);
 

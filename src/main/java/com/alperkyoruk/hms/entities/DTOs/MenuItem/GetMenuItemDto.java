@@ -42,7 +42,7 @@ public class GetMenuItemDto {
         this.availableTime = menuItem.getAvailableTime();
     }
 
-    public List<GetMenuItemDto> buildListGetMenuItemDto(List<MenuItem> menuItems) {
+    public static List<GetMenuItemDto> buildListGetMenuItemDto(List<MenuItem> menuItems) {
         return menuItems.stream()
                 .map(GetMenuItemDto::new)
                 .collect(Collectors.toList());
