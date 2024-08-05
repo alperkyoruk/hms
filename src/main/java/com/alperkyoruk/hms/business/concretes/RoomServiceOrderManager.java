@@ -3,10 +3,9 @@ package com.alperkyoruk.hms.business.concretes;
 import com.alperkyoruk.hms.business.abstracts.MenuItemService;
 import com.alperkyoruk.hms.business.abstracts.RoomService;
 import com.alperkyoruk.hms.business.abstracts.RoomServiceOrderService;
+import com.alperkyoruk.hms.business.constants.GuestMessages;
 import com.alperkyoruk.hms.business.constants.RoomServiceOrderMessages;
-import com.alperkyoruk.hms.core.result.DataResult;
-import com.alperkyoruk.hms.core.result.Result;
-import com.alperkyoruk.hms.core.result.SuccessResult;
+import com.alperkyoruk.hms.core.result.*;
 import com.alperkyoruk.hms.dataAccess.RoomServiceOrderDao;
 import com.alperkyoruk.hms.entities.DTOs.RoomServiceOrder.CreateRoomServiceOrderDto;
 import com.alperkyoruk.hms.entities.DTOs.RoomServiceOrder.GetRoomServiceOrderDto;
@@ -15,8 +14,11 @@ import com.alperkyoruk.hms.entities.RoomServiceOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,8 +51,8 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
 
 
         RoomServiceOrder roomServiceOrder = RoomServiceOrder.builder()
-                .orderDate(createRoomServiceOrderDto.getOrderDate())
-                .orderTime(createRoomServiceOrderDto.getOrderTime())
+                .orderDate(new Date())
+                .orderTime(LocalTime.now())
                 .comment(createRoomServiceOrderDto.getComment())
                 .estimatedTime(createRoomServiceOrderDto.getEstimatedTime())
                 .menuItems(menuItems)
@@ -60,6 +62,8 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
                 .build();
 
         roomServiceOrderDao.save(roomServiceOrder);
+
+        CalculateEstimatedTime(roomServiceOrder.getId());
         return new SuccessResult(RoomServiceOrderMessages.roomServiceOrderAddedSuccessfully);
     }
 
@@ -67,7 +71,7 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
     public Result deleteRoomServiceOrder(int id) {
         var roomServiceOrderResponse = roomServiceOrderDao.findById(id);
         if(roomServiceOrderResponse == null){
-            return new SuccessResult(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+            return new ErrorResult(RoomServiceOrderMessages.roomServiceOrdersNotFound);
         }
         roomServiceOrderDao.delete(roomServiceOrderResponse);
         return new SuccessResult(RoomServiceOrderMessages.roomServiceOrderDeletedSuccessfully);
@@ -75,41 +79,126 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
 
     @Override
     public Result updateRoomServiceOrder(GetRoomServiceOrderDto getRoomServiceOrderDto) {
-        return null;
+        var result = roomServiceOrderDao.findById(getRoomServiceOrderDto.getId());
+        if(result == null){
+            return new ErrorResult(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+
+        var guest = roomService.getRoomById(getRoomServiceOrderDto.getId()).getData().getReservation().getGuests();
+        if(guest == null){
+            return new ErrorResult(GuestMessages.guestNotFound);
+        }
+
+
+
+        result.setComment(getRoomServiceOrderDto.getComment() == null ? result.getComment() : getRoomServiceOrderDto.getComment());
+        result.setDeliveryTime(getRoomServiceOrderDto.getDeliveryTime() == null ? result.getDeliveryTime() : getRoomServiceOrderDto.getDeliveryTime());
+        result.setEstimatedTime(getRoomServiceOrderDto.getEstimatedTime() == null ? result.getEstimatedTime() : getRoomServiceOrderDto.getEstimatedTime());
+        result.setOrderTime(getRoomServiceOrderDto.getOrderTime() == null ? result.getOrderTime() : getRoomServiceOrderDto.getOrderTime());
+        result.setOrderDate(getRoomServiceOrderDto.getOrderDate() == null ? result.getOrderDate() : getRoomServiceOrderDto.getOrderDate());
+        result.setStatus(getRoomServiceOrderDto.getStatus() == null ? result.getStatus() : getRoomServiceOrderDto.getStatus());
+        result.setTotalPrice(getRoomServiceOrderDto.getTotalPrice() == 0 ? result.getTotalPrice() : getRoomServiceOrderDto.getTotalPrice());
+        result.setRoom(roomService.getRoomById(getRoomServiceOrderDto.getRoom().getId()).getData());
+        result.setGuest(guest.getFirst());
+
+
+        roomServiceOrderDao.save(result);
+        return new SuccessResult(RoomServiceOrderMessages.roomServiceOrderUpdatedSuccessfully);
     }
 
     @Override
     public DataResult<GetRoomServiceOrderDto> getById(int id) {
-        return null;
+        var result = roomServiceOrderDao.findById(id);
+        if(result == null){
+            return new ErrorDataResult<>(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+        var returnRoomServiceOrder = new GetRoomServiceOrderDto(result);
+        return new SuccessDataResult<>(returnRoomServiceOrder, RoomServiceOrderMessages.roomServiceOrderSuccessfullyBrought);
     }
 
     @Override
     public DataResult<GetRoomServiceOrderDto> getByRoomServiceOrderId(int roomServiceOrderId) {
-        return null;
+        var result = roomServiceOrderDao.findById(roomServiceOrderId);
+        if(result == null){
+            return new ErrorDataResult<>(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+        var returnRoomServiceOrder = new GetRoomServiceOrderDto(result);
+        return new SuccessDataResult<>(returnRoomServiceOrder, RoomServiceOrderMessages.roomServiceOrderSuccessfullyBrought);
     }
 
     @Override
     public DataResult<List<GetRoomServiceOrderDto>> getAllByRoomServiceOrderStatus(String roomServiceOrderStatus) {
-        return null;
+        var result = roomServiceOrderDao.findAllByStatus(roomServiceOrderStatus);
+        if(result.isEmpty()){
+            return new ErrorDataResult<>(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+        List<GetRoomServiceOrderDto> returnList = GetRoomServiceOrderDto.buildListGetRoomServiceOrderDto(result);
+        return new SuccessDataResult<>(returnList, RoomServiceOrderMessages.roomServiceOrdersSuccessfullyBrought);
     }
 
     @Override
     public DataResult<List<GetRoomServiceOrderDto>> getAllByRoomServiceOrderRoomNumber(int roomNumber) {
-        return null;
+        var result = roomServiceOrderDao.findAllByRoomRoomNumber(roomNumber);
+        if(result.isEmpty()){
+            return new ErrorDataResult<>(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+        List<GetRoomServiceOrderDto> returnList = GetRoomServiceOrderDto.buildListGetRoomServiceOrderDto(result);
+        return new SuccessDataResult<>(returnList, RoomServiceOrderMessages.roomServiceOrdersSuccessfullyBrought);
     }
 
     @Override
     public DataResult<List<GetRoomServiceOrderDto>> getAllByGuestId(int guestId) {
-        return null;
+        var result = roomServiceOrderDao.findAllByGuestId(guestId);
+        if(result.isEmpty()){
+            return new ErrorDataResult<>(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+        List<GetRoomServiceOrderDto> returnList = GetRoomServiceOrderDto.buildListGetRoomServiceOrderDto(result);
+        return new SuccessDataResult<>(returnList, RoomServiceOrderMessages.roomServiceOrdersSuccessfullyBrought);
     }
 
     @Override
     public DataResult<List<GetRoomServiceOrderDto>> getAllByOrderTimeBefore(LocalTime orderTime) {
-        return null;
+        var result = roomServiceOrderDao.findAllByOrderTimeBefore(orderTime);
+        if(result.isEmpty()){
+            return new ErrorDataResult<>(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+        List<GetRoomServiceOrderDto> returnList = GetRoomServiceOrderDto.buildListGetRoomServiceOrderDto(result);
+        return new SuccessDataResult<>(returnList, RoomServiceOrderMessages.roomServiceOrdersSuccessfullyBrought);
     }
 
     @Override
     public DataResult<List<GetRoomServiceOrderDto>> getAllByOrderTimeAfter(LocalTime orderTime) {
-        return null;
+        var result = roomServiceOrderDao.findAllByOrderTimeAfter(orderTime);
+        if(result.isEmpty()){
+            return new ErrorDataResult<>(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+        List<GetRoomServiceOrderDto> returnList = GetRoomServiceOrderDto.buildListGetRoomServiceOrderDto(result);
+        return new SuccessDataResult<>(returnList, RoomServiceOrderMessages.roomServiceOrdersSuccessfullyBrought);
     }
+
+    @Override
+    public DataResult<GetRoomServiceOrderDto> CalculateEstimatedTime(int id) {
+        RoomServiceOrder roomServiceOrder = roomServiceOrderDao.findById(id);
+        if (roomServiceOrder == null) {
+            return new ErrorDataResult<>(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+
+        List<MenuItem> menuItems = roomServiceOrder.getMenuItems();
+
+        Duration totalPreparationTime = menuItems.stream()
+                .map(MenuItem::getPreparationTime)
+                .map(preparationTime -> Duration.ofHours(preparationTime.getHour())
+                        .plusMinutes(preparationTime.getMinute())
+                        .plusSeconds(preparationTime.getSecond()))
+                .reduce(Duration.ZERO, Duration::plus);
+
+        LocalTime estimatedTime = LocalTime.of(totalPreparationTime.toHoursPart(), totalPreparationTime.toMinutesPart(), totalPreparationTime.toSecondsPart());
+        roomServiceOrder.setEstimatedTime(estimatedTime);
+
+        roomServiceOrderDao.save(roomServiceOrder);
+
+        return new SuccessDataResult<>(RoomServiceOrderMessages.estimatedTimeCalculatedSuccessfully);
+    }
+
+
 }

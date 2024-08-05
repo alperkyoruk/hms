@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Data
 public class GetRoomServiceOrderDto {
+    private int id;
     private String status;
     private String comment;
     private Date orderDate;
@@ -29,6 +30,7 @@ public class GetRoomServiceOrderDto {
     private List<GetMenuItemDto> menuItems;
 
     public GetRoomServiceOrderDto(RoomServiceOrder roomServiceOrder) {
+        this.id = roomServiceOrder.getId();
         this.status = roomServiceOrder.getStatus();
         this.comment = roomServiceOrder.getComment();
         this.orderDate = roomServiceOrder.getOrderDate();

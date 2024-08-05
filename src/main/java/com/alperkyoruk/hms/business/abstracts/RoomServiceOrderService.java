@@ -28,4 +28,6 @@ public interface RoomServiceOrderService {
     DataResult<List<GetRoomServiceOrderDto>> getAllByOrderTimeBefore(LocalTime orderTime);
 
     DataResult<List<GetRoomServiceOrderDto>> getAllByOrderTimeAfter(LocalTime orderTime);
+
+    DataResult<GetRoomServiceOrderDto> CalculateEstimatedTime(int id);
 }
