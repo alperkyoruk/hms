@@ -35,7 +35,7 @@ public class GetTicketDto {
         this.guestId = ticket.getGuest().getId();
     }
 
-    public List<GetTicketDto> buildListGetTicketDto(List<Ticket> tickets) {
+    public static List<GetTicketDto> buildListGetTicketDto(List<Ticket> tickets) {
         return tickets.stream()
                 .map(GetTicketDto::new)
                 .collect(Collectors.toList());
