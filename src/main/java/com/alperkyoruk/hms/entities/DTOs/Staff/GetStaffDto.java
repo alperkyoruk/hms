@@ -24,6 +24,7 @@ public class GetStaffDto {
     private String department;
     private String status;
     private Date hireDate;
+    private String badgeNumber;
 
     public GetStaffDto(Staff staff){
         this.id = staff.getId();
@@ -37,7 +38,7 @@ public class GetStaffDto {
         this.hireDate = staff.getHireDate();
     }
 
-    public List<GetStaffDto> buildListGetStaffDto(List<Staff> staffs){
+    public static List<GetStaffDto> buildListGetStaffDto(List<Staff> staffs){
         return staffs.stream()
                 .map(GetStaffDto::new)
                 .collect(Collectors.toList());

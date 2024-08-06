@@ -43,6 +43,9 @@ public class Staff {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "badge_number")
+    private String badgeNumber;
+
     @OneToMany(mappedBy = "staff")
     @JsonIgnore
     private List<Ticket> tickets;

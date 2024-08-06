@@ -26,5 +26,5 @@ public interface StaffDao extends JpaRepository<Staff, Integer> {
     List<Staff> findAllByPerformanceRatingGreaterThanEqual(double performanceRating);
 
 
-
+    Staff findByBadgeNumber(String badgeNumber);
 }

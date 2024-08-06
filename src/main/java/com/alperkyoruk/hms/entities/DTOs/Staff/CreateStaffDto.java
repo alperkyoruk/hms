@@ -24,5 +24,6 @@ public class CreateStaffDto {
     private String status;
     private Date hireDate;
     private Set<Role> authorities;
+    private String badgeNumber;
 
 }
