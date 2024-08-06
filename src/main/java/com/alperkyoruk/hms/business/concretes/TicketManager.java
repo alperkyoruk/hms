@@ -3,28 +3,34 @@ package com.alperkyoruk.hms.business.concretes;
 import com.alperkyoruk.hms.business.abstracts.GuestService;
 import com.alperkyoruk.hms.business.abstracts.TicketService;
 import com.alperkyoruk.hms.business.constants.GuestMessages;
+import com.alperkyoruk.hms.business.constants.StaffMessages;
 import com.alperkyoruk.hms.business.constants.TicketMessages;
 import com.alperkyoruk.hms.core.result.*;
+import com.alperkyoruk.hms.dataAccess.StaffDao;
 import com.alperkyoruk.hms.dataAccess.TicketDao;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.CreateTicketDto;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.GetTicketDto;
+import com.alperkyoruk.hms.entities.Staff;
 import com.alperkyoruk.hms.entities.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketManager implements TicketService {
+
 
     @Autowired
     private TicketDao ticketDao;
 
     @Autowired
     private GuestService guestService;
+
+    @Autowired
+    private StaffDao staffDao;
 
     @Override
     public Result addTicket(CreateTicketDto createTicketDto) {
@@ -42,6 +48,23 @@ public class TicketManager implements TicketService {
         }
 
 
+        List<Staff> availableStaff = staffDao.findAllByStatusAndDepartment("ACTIVE", createTicketDto.getCategory());
+
+        if(availableStaff.isEmpty()){
+            return new ErrorResult(StaffMessages.StaffNotFound);
+        }
+
+        Map<Staff, Long> staffActiveTicketCounts = availableStaff.stream()
+                .collect(Collectors.toMap(
+                        staff -> staff,
+                        staff -> (long) ticketDao.findAllByStaffAndStatus(staff, "CREATED").size()
+                ));
+
+        Staff selectedStaff = staffActiveTicketCounts.entrySet().stream()
+                .min(Comparator.comparingLong(Map.Entry::getValue))
+                .get()
+                .getKey();
+
 
         Ticket ticket = Ticket.builder()
                 .ticketNumber(ticketNumber)
@@ -54,6 +77,7 @@ public class TicketManager implements TicketService {
                 .comment(createTicketDto.getComment())
                 .resolvedDate(createTicketDto.getResolvedDate())
                 .issue(createTicketDto.getIssue())
+                .staff(selectedStaff)
                 .build();
 
         ticketDao.save(ticket);
@@ -222,6 +246,25 @@ public class TicketManager implements TicketService {
         List<GetTicketDto> returnList = GetTicketDto.buildListGetTicketDto(ticketResponse);
         return new SuccessDataResult<>(returnList, TicketMessages.ticketsSuccessfullyBrought);
     }
+
+    @Override
+    public Result assignTicketToStaff(String ticketNumber, String badgeNumber) {
+        var ticketResponse = ticketDao.findByTicketNumber(String.valueOf(ticketNumber));
+        if(ticketResponse == null){
+            return new ErrorResult(TicketMessages.ticketNotFound);
+        }
+
+        var staffResponse = staffDao.findByBadgeNumber(badgeNumber);
+        if(staffResponse == null){
+            return new ErrorResult(StaffMessages.StaffNotFound);
+        }
+
+        ticketResponse.setStaff(ticketResponse.getStaff() == null ? staffResponse : ticketResponse.getStaff());
+
+        ticketDao.save(ticketResponse);
+        return new SuccessResult(TicketMessages.ticketAssignedSuccessfully);
+    }
+
 
 
 }

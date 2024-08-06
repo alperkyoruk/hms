@@ -1,5 +1,6 @@
 package com.alperkyoruk.hms.dataAccess;
 
+import com.alperkyoruk.hms.entities.Staff;
 import com.alperkyoruk.hms.entities.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -31,4 +32,6 @@ public interface TicketDao extends JpaRepository<Ticket, Integer> {
     List<Ticket> findAllByIssue(String issue);
 
     List<Ticket> findAllByStaffBadgeNumber(String staffBadgeNumber);
+
+    List<Ticket> findAllByStaffAndStatus(Staff staff, String status);
 }

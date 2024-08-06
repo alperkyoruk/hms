@@ -58,7 +58,7 @@ public class GetGuestDto {
                 this.vipStatus = guest.getVipStatus();
                 this.loyaltyCardNumber = guest.getLoyaltyCardNumber();
                 this.roomNumber = guest.getRoom().getRoomNumber();
-                this.reservationNumber = guest.getReservation().getReservationNumber();
+                this.reservationNumber = guest.getReservation() != null ? guest.getReservation().getReservationNumber() : "N/A";
 
         }
 

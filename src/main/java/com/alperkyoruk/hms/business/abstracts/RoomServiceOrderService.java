@@ -6,6 +6,7 @@ import com.alperkyoruk.hms.entities.DTOs.RoomServiceOrder.CreateRoomServiceOrder
 import com.alperkyoruk.hms.entities.DTOs.RoomServiceOrder.GetRoomServiceOrderDto;
 
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 public interface RoomServiceOrderService {
@@ -30,4 +31,8 @@ public interface RoomServiceOrderService {
     DataResult<List<GetRoomServiceOrderDto>> getAllByOrderTimeAfter(LocalTime orderTime);
 
     DataResult<GetRoomServiceOrderDto> CalculateEstimatedTime(int id);
+
+    DataResult<List<GetRoomServiceOrderDto>> getAll();
+
+    DataResult<List<GetRoomServiceOrderDto>> getAllByDate(Date date);
 }

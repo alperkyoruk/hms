@@ -7,4 +7,5 @@ public class TicketMessages {
     public static String ticketUpdatedSuccessfully;
     public static String ticketSuccessfullyBrought;
     public static String ticketsSuccessfullyBrought;
+    public static String ticketAssignedSuccessfully;
 }

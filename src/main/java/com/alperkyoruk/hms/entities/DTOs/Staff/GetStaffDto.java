@@ -36,6 +36,7 @@ public class GetStaffDto {
         this.department = staff.getDepartment();
         this.status = staff.getStatus();
         this.hireDate = staff.getHireDate();
+        this.badgeNumber = staff.getBadgeNumber();
     }
 
     public static List<GetStaffDto> buildListGetStaffDto(List<Staff> staffs){

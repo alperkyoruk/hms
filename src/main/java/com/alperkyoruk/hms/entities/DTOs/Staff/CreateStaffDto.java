@@ -19,11 +19,8 @@ public class CreateStaffDto {
     private String email;
     private String phoneNumber;
     private String position;
-    private String password;
     private String department;
     private String status;
     private Date hireDate;
     private Set<Role> authorities;
-    private String badgeNumber;
-
 }

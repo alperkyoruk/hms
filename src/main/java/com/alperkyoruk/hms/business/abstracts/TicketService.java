@@ -39,5 +39,7 @@ public interface TicketService {
 
     DataResult<List<GetTicketDto>> getAllByIssue(String issue);
 
+    Result assignTicketToStaff(String ticketNumber, String badgeNumber);
+
 
 }

@@ -21,9 +21,7 @@ public interface MenuItemService {
 
     DataResult<List<GetMenuItemDto>> getMenuItemsByName(String name);
 
-    DataResult<List<GetMenuItemDto>> getMenuItemsByPriceBefore(double price);
-
-    DataResult<List<GetMenuItemDto>> getMenuItemsByPriceAfter(double price);
+    DataResult<List<GetMenuItemDto>> getMenuItemsByPrice(double minPrice, double maxPrice);
 
     DataResult<List<GetMenuItemDto>> getMenuItemsByCategory(String category);
 

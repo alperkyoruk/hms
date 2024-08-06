@@ -49,11 +49,10 @@ public class Reservation {
     @Column(name = "discount_code")
     private String discountCode;
 
-    @OneToMany(mappedBy = "reservation")
-    @JsonIgnore
+    @OneToMany(mappedBy = "reservation", fetch = FetchType.EAGER)
     private List<Room> rooms;
 
-    @OneToMany (mappedBy = "reservation")
+    @OneToMany (mappedBy = "reservation", fetch = FetchType.EAGER)
     private List<Guest> guests;
 
 

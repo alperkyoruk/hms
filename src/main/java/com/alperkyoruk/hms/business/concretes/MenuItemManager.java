@@ -7,15 +7,17 @@ import com.alperkyoruk.hms.dataAccess.MenuItemDao;
 import com.alperkyoruk.hms.entities.DTOs.MenuItem.CreateMenuItemDto;
 import com.alperkyoruk.hms.entities.DTOs.MenuItem.GetMenuItemDto;
 import com.alperkyoruk.hms.entities.MenuItem;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class MenuItemManager implements MenuItemService {
 
 
-    private MenuItemDao menuItemDao;
+    private final MenuItemDao menuItemDao;
 
     @Override
     public Result addMenuItem(CreateMenuItemDto createMenuItemDto) {
@@ -112,8 +114,8 @@ public class MenuItemManager implements MenuItemService {
     }
 
     @Override
-    public DataResult<List<GetMenuItemDto>> getMenuItemsByPriceBefore(double price) {
-        var result = menuItemDao.findAllByPriceBefore(price);
+    public DataResult<List<GetMenuItemDto>> getMenuItemsByPrice(double minPrice, double maxPrice) {
+        var result = menuItemDao.findAllByPriceBetween(minPrice, maxPrice);
 
         if(result.isEmpty()){
             return new ErrorDataResult<>(MenuItemMessages.menuItemsNotFound);
@@ -123,17 +125,6 @@ public class MenuItemManager implements MenuItemService {
         return new SuccessDataResult<>(returnList, MenuItemMessages.menuItemsSuccessfullyBrought);
     }
 
-    @Override
-    public DataResult<List<GetMenuItemDto>> getMenuItemsByPriceAfter(double price) {
-        var result = menuItemDao.findAllByPriceAfter(price);
-
-        if(result.isEmpty()){
-            return new ErrorDataResult<>(MenuItemMessages.menuItemsNotFound);
-        }
-
-        List<GetMenuItemDto> returnList = new GetMenuItemDto().buildListGetMenuItemDto(result);
-        return new SuccessDataResult<>(returnList, MenuItemMessages.menuItemsSuccessfullyBrought);
-    }
 
     @Override
     public DataResult<List<GetMenuItemDto>> getMenuItemsByCategory(String category) {

@@ -10,9 +10,7 @@ public interface MenuItemDao extends JpaRepository<MenuItem, Integer> {
 
     List<MenuItem> findAllByNameContainsIgnoreCase(String name);
 
-    List<MenuItem> findAllByPriceBefore(double price);
-
-    List<MenuItem> findAllByPriceAfter(double price);
+    List<MenuItem> findAllByPriceBetween(double minPrice, double maxPrice);
 
     List<MenuItem> findAllByCategory(String category);
 

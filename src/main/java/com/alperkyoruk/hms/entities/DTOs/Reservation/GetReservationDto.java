@@ -4,6 +4,7 @@ import com.alperkyoruk.hms.entities.DTOs.Guest.GetGuestDto;
 import com.alperkyoruk.hms.entities.DTOs.Room.GetRoomDto;
 import com.alperkyoruk.hms.entities.Guest;
 import com.alperkyoruk.hms.entities.Reservation;
+import com.alperkyoruk.hms.entities.Room;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,6 +43,7 @@ public class GetReservationDto {
         this.rooms = GetRoomDto.buildListGetRoomDto(reservation.getRooms());
 
     }
+    
 
     public static List<GetReservationDto> buildListGetReservationDto(List<Reservation> reservations) {
         return reservations.stream()
@@ -49,6 +51,8 @@ public class GetReservationDto {
                 .collect(Collectors.toList());
 
     }
+
+
 
 }
 

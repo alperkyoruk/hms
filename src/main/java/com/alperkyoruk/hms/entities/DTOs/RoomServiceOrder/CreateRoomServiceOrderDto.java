@@ -18,11 +18,6 @@ import java.util.List;
 public class CreateRoomServiceOrderDto {
     private String status;
     private String comment;
-    private Date orderDate;
-    private LocalTime estimatedTime;
-    private LocalTime orderTime;
-    private LocalTime deliveryTime;
-    private double totalPrice;
     private int roomId;
     private int guestId;
     private List<Integer> menuItemIds;

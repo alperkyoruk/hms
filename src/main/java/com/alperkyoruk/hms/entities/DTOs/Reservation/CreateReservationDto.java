@@ -1,5 +1,6 @@
 package com.alperkyoruk.hms.entities.DTOs.Reservation;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,15 +15,13 @@ import java.util.List;
 @Builder
 public class CreateReservationDto {
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date endDate;
 
-    private Date createdAt;
-
     private String status;
-
-    private double totalAmount;
 
     private String paymentStatus;
 

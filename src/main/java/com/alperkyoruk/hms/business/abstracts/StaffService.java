@@ -33,6 +33,8 @@ public interface StaffService {
 
     DataResult<List<GetStaffDto>> getAllByPerformanceRating(double performanceRating);
 
+    DataResult<List<GetStaffDto>> getAllByPerformanceRatingDesc();
+
     DataResult<List<GetStaffDto>> getAll();
 
 

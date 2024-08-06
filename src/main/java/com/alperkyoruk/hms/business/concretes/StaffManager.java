@@ -16,8 +16,10 @@ import java.util.List;
 @Service
 public class StaffManager implements StaffService {
 
+
     @Autowired
     private StaffDao staffDao;
+
 
 
     @Override
@@ -36,7 +38,7 @@ public class StaffManager implements StaffService {
                 .firstName(createStaffDto.getFirstName())
                 .lastName(createStaffDto.getLastName())
                 .email(createStaffDto.getEmail())
-                .badgeNumber(createStaffDto.getBadgeNumber())
+                .badgeNumber(badgeNumber)
                 .phoneNumber(createStaffDto.getPhoneNumber())
                 .position(createStaffDto.getPosition())
                 .department(createStaffDto.getDepartment())
@@ -181,6 +183,17 @@ public class StaffManager implements StaffService {
     @Override
     public DataResult<List<GetStaffDto>> getAll() {
         var staffResponse = staffDao.findAll();
+        if(staffResponse.isEmpty()){
+            return new ErrorDataResult<>(StaffMessages.StaffNotFound);
+        }
+
+        List<GetStaffDto> returnList = GetStaffDto.buildListGetStaffDto(staffResponse);
+        return new SuccessDataResult<>(returnList, StaffMessages.StaffsSuccessfullyBrought);
+    }
+
+    @Override
+    public DataResult<List<GetStaffDto>> getAllByPerformanceRatingDesc() {
+        var staffResponse = staffDao.findAllByOrderByPerformanceRatingDesc();
         if(staffResponse.isEmpty()){
             return new ErrorDataResult<>(StaffMessages.StaffNotFound);
         }

@@ -19,12 +19,19 @@ public class GuestManager implements GuestService {
     private GuestDao guestDao;
     private RoomService roomService;
 
-    public GuestManager(GuestDao guestDao) {
+    public GuestManager(GuestDao guestDao, RoomService roomService) {
         this.guestDao = guestDao;
+        this.roomService = roomService;
     }
 
     @Override
     public Result addGuest(CreateGuestDto createGuestDto) {
+
+        var room = roomService.getRoomByRoomNumber(createGuestDto.getRoomNumber()).getData();
+        if(room == null){
+            return new ErrorResult(GuestMessages.roomNotFound);
+        }
+
         Guest guest = Guest.builder()
                 .firstName(createGuestDto.getFirstName())
                 .lastName(createGuestDto.getLastName())
@@ -37,6 +44,8 @@ public class GuestManager implements GuestService {
                 .vipStatus(createGuestDto.getVipStatus())
                 .loyaltyCardNumber(createGuestDto.getLoyaltyCardNumber())
                 .sex(createGuestDto.getSex())
+                .reservation(null)
+                .room(room)
                 .build();
 
         guestDao.save(guest);

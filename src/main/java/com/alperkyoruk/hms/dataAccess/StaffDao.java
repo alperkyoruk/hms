@@ -27,4 +27,8 @@ public interface StaffDao extends JpaRepository<Staff, Integer> {
 
 
     Staff findByBadgeNumber(String badgeNumber);
+
+    List<Staff> findAllByStatusAndDepartment(String status, String department);
+
+    List<Staff> findAllByOrderByPerformanceRatingDesc();
 }

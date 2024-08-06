@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class RoomServiceOrderManager implements RoomServiceOrderService {
 
+
     @Autowired
     private RoomServiceOrderDao roomServiceOrderDao;
 
@@ -54,7 +55,7 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
                 .orderDate(new Date())
                 .orderTime(LocalTime.now())
                 .comment(createRoomServiceOrderDto.getComment())
-                .estimatedTime(createRoomServiceOrderDto.getEstimatedTime())
+                .estimatedTime(null)
                 .menuItems(menuItems)
                 .room(room)
                 .status(createRoomServiceOrderDto.getStatus())
@@ -177,6 +178,27 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
     }
 
     @Override
+    public DataResult<List<GetRoomServiceOrderDto>> getAll() {
+        var result = roomServiceOrderDao.findAll();
+        if(result.isEmpty()){
+            return new ErrorDataResult<>(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+        List<GetRoomServiceOrderDto> returnList = GetRoomServiceOrderDto.buildListGetRoomServiceOrderDto(result);
+        return new SuccessDataResult<>(returnList, RoomServiceOrderMessages.roomServiceOrdersSuccessfullyBrought);
+    }
+
+    @Override
+    public DataResult<List<GetRoomServiceOrderDto>> getAllByDate(Date date) {
+        var result = roomServiceOrderDao.findAllByOrderDate(date);
+        if(result.isEmpty()){
+            return new ErrorDataResult<>(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+
+        List<GetRoomServiceOrderDto> returnList = GetRoomServiceOrderDto.buildListGetRoomServiceOrderDto(result);
+        return new SuccessDataResult<>(returnList, RoomServiceOrderMessages.roomServiceOrdersSuccessfullyBrought);
+    }
+
+    @Override
     public DataResult<GetRoomServiceOrderDto> CalculateEstimatedTime(int id) {
         RoomServiceOrder roomServiceOrder = roomServiceOrderDao.findById(id);
         if (roomServiceOrder == null) {
@@ -192,7 +214,18 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
                         .plusSeconds(preparationTime.getSecond()))
                 .reduce(Duration.ZERO, Duration::plus);
 
-        LocalTime estimatedTime = LocalTime.of(totalPreparationTime.toHoursPart(), totalPreparationTime.toMinutesPart(), totalPreparationTime.toSecondsPart());
+        long hours = totalPreparationTime.toHours();
+        long minutes = totalPreparationTime.toMinutesPart();
+        long seconds = totalPreparationTime.toSecondsPart();
+
+        // Ensure valid range for LocalTime
+        if (hours >= 24) {
+            hours = 23;
+            minutes = 59;
+            seconds = 59;
+        }
+
+        LocalTime estimatedTime = LocalTime.of((int) hours, (int) minutes, (int) seconds);
         roomServiceOrder.setEstimatedTime(estimatedTime);
 
         roomServiceOrderDao.save(roomServiceOrder);
