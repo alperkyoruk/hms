@@ -55,6 +55,9 @@ public class Guest {
     @Column(name = "loyalty_card_number")
     private String loyaltyCardNumber;
 
+    @Column(name = "status")
+    private String status;
+
     @OneToOne
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private Room room;

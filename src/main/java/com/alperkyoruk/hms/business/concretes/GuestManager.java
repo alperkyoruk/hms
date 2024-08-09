@@ -2,12 +2,14 @@ package com.alperkyoruk.hms.business.concretes;
 
 import com.alperkyoruk.hms.business.abstracts.GuestService;
 import com.alperkyoruk.hms.business.abstracts.RoomService;
+import com.alperkyoruk.hms.business.abstracts.TicketService;
 import com.alperkyoruk.hms.business.constants.GuestMessages;
 import com.alperkyoruk.hms.core.result.*;
 import com.alperkyoruk.hms.dataAccess.GuestDao;
 import com.alperkyoruk.hms.entities.DTOs.Guest.CreateGuestDto;
 import com.alperkyoruk.hms.entities.DTOs.Guest.GetGuestDto;
 import com.alperkyoruk.hms.entities.Guest;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +20,12 @@ public class GuestManager implements GuestService {
 
     private GuestDao guestDao;
     private RoomService roomService;
+    private TicketService ticketService;
 
-    public GuestManager(GuestDao guestDao, RoomService roomService) {
+    public GuestManager(GuestDao guestDao, RoomService roomService, @Lazy TicketService ticketService) {
         this.guestDao = guestDao;
         this.roomService = roomService;
+        this.ticketService = ticketService;
     }
 
     @Override
@@ -31,6 +35,7 @@ public class GuestManager implements GuestService {
         if(room == null){
             return new ErrorResult(GuestMessages.roomNotFound);
         }
+
 
         Guest guest = Guest.builder()
                 .firstName(createGuestDto.getFirstName())
@@ -49,6 +54,7 @@ public class GuestManager implements GuestService {
                 .build();
 
         guestDao.save(guest);
+        roomService.updateRoomStatus(room, "OCCUPIED");
         return new SuccessResult(GuestMessages.guestAdded);
     }
 
@@ -181,5 +187,19 @@ public class GuestManager implements GuestService {
         }
 
         return new SuccessDataResult<>(result,GuestMessages.guestSuccessfullyBrought);
+    }
+
+    @Override
+    public Result checkOutGuest(int guestId) {
+        var guest = guestDao.findById(guestId);
+        if(guest == null){
+            return new ErrorResult(GuestMessages.guestNotFound);
+        }
+
+        roomService.updateRoomStatus(guest.getRoom(), "CLEANING");
+        ticketService.addTicketForHouseKeeping(guest.getRoom());
+        guest.setStatus("CHECKOUT");
+        guestDao.save(guest);
+        return new SuccessResult(GuestMessages.guestCheckedOut);
     }
 }

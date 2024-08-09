@@ -151,7 +151,7 @@ public class UserManager implements UserService {
         }
 
         userResponse.getAuthorities().remove(Role.ROLE_STAFF);
-        return new SuccessResult(UserMessages.StaffAddedSuccessfully);
+        return new SuccessResult(UserMessages.StaffRemovedSuccessfully);
     }
 
     @Override

@@ -155,4 +155,12 @@ public class RoomManager implements RoomService {
         return new SuccessDataResult<>(room, RoomMessages.RoomSuccessfullyBrought);
     }
 
+    @Override
+    public Result updateRoomStatus(Room room, String status) {
+        room.setRoomStatus(status);
+        roomDao.save(room);
+        return new SuccessResult(RoomMessages.RoomStatusUpdatedSuccessfully);
+    }
+
+
 }

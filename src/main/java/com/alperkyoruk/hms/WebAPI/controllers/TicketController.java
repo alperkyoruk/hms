@@ -95,5 +95,10 @@ public class TicketController {
         return ticketService.assignTicketToStaff(ticketNumber, badgeNumber);
     }
 
+    @PostMapping("/changeTicketStatus")
+    public Result changeTicketStatus(@RequestBody String ticketNumber,@RequestBody String status){
+        return ticketService.changeTicketStatus(ticketNumber, status);
+    }
+
 
 }

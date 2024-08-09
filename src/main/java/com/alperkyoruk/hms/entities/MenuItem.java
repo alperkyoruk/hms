@@ -48,7 +48,7 @@ public class MenuItem {
     private String allergenInfo;
 
     @Column(name = "preparation_time")
-    private LocalTime preparationTime;
+    private int preparationTime;
 
     @Column(name = "avaliable_time")
     private String availableTime;

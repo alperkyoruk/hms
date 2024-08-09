@@ -67,7 +67,7 @@ public class MenuItemManager implements MenuItemService {
         result.setDietaryInfo(getMenuItemDto.getDietaryInfo() == null ? result.getDietaryInfo() : getMenuItemDto.getDietaryInfo());
         result.setIngredients(getMenuItemDto.getIngredients() == null ? result.getIngredients() : getMenuItemDto.getIngredients());
         result.setName(getMenuItemDto.getName() == null ? result.getName() : getMenuItemDto.getName());
-        result.setPreparationTime(getMenuItemDto.getPreparationTime() == null ? result.getPreparationTime() : getMenuItemDto.getPreparationTime());
+        result.setPreparationTime(getMenuItemDto.getPreparationTime() == 0 ? result.getPreparationTime() : getMenuItemDto.getPreparationTime());
         result.setPrice(getMenuItemDto.getPrice() == 0 ? result.getPrice() : getMenuItemDto.getPrice());
         result.setStatus(getMenuItemDto.getStatus() == null ? result.getStatus() : getMenuItemDto.getStatus());
         result.setAvailableTime(getMenuItemDto.getAvailableTime() == null ? result.getAvailableTime() : getMenuItemDto.getAvailableTime());

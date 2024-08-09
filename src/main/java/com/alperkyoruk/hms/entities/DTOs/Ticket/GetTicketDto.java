@@ -1,6 +1,7 @@
 package com.alperkyoruk.hms.entities.DTOs.Ticket;
 
 import com.alperkyoruk.hms.entities.DTOs.Staff.GetStaffDto;
+import com.alperkyoruk.hms.entities.Room;
 import com.alperkyoruk.hms.entities.Ticket;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class GetTicketDto {
     private String comment;
     private int guestId;
     private GetStaffDto assignedStaff;
+    private int roomNumber;
 
     public GetTicketDto(Ticket ticket) {
         this.issue = ticket.getIssue();
@@ -36,6 +38,7 @@ public class GetTicketDto {
         this.comment = ticket.getComment();
         this.guestId = ticket.getGuest().getId();
         this.assignedStaff = new GetStaffDto(ticket.getStaff());
+        this.roomNumber = ticket.getRoom().getRoomNumber();
     }
 
     public static List<GetTicketDto> buildListGetTicketDto(List<Ticket> tickets) {

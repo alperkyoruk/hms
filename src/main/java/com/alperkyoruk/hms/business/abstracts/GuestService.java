@@ -30,6 +30,8 @@ public interface GuestService {
 
     DataResult<Guest> getGuestById(int id);
 
+    Result checkOutGuest(int guestId);
+
 
 
 

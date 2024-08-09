@@ -43,6 +43,8 @@ public class GetGuestDto {
 
         private String reservationNumber;
 
+        private String status;
+
 
         public GetGuestDto(Guest guest) {
                 this.id = guest.getId();
@@ -59,6 +61,7 @@ public class GetGuestDto {
                 this.loyaltyCardNumber = guest.getLoyaltyCardNumber();
                 this.roomNumber = guest.getRoom().getRoomNumber();
                 this.reservationNumber = guest.getReservation() != null ? guest.getReservation().getReservationNumber() : "N/A";
+                this.status = guest.getStatus();
 
         }
 

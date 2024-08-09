@@ -24,7 +24,7 @@ public class GetMenuItemDto {
     private String ingredients;
     private String allergenInfo;
     private String caloricContent;
-    private LocalTime preparationTime;
+    private int preparationTime;
     private String availableTime;
 
     public GetMenuItemDto(MenuItem menuItem){

@@ -1,10 +1,13 @@
 package com.alperkyoruk.hms.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -41,7 +44,13 @@ public class Room {
 
     @ManyToOne(targetEntity = Reservation.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id", referencedColumnName = "id")
+    @JsonIgnore
     private Reservation reservation;
+
+    @OneToMany(targetEntity = Guest.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id", referencedColumnName = "id")
+    @JsonIgnore
+    private List<Guest> guests;
 
 
 }

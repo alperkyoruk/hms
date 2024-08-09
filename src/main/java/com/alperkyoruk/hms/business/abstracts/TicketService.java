@@ -4,6 +4,7 @@ import com.alperkyoruk.hms.core.result.DataResult;
 import com.alperkyoruk.hms.core.result.Result;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.CreateTicketDto;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.GetTicketDto;
+import com.alperkyoruk.hms.entities.Room;
 
 import java.util.Date;
 import java.util.List;
@@ -40,6 +41,10 @@ public interface TicketService {
     DataResult<List<GetTicketDto>> getAllByIssue(String issue);
 
     Result assignTicketToStaff(String ticketNumber, String badgeNumber);
+
+    Result changeTicketStatus(String ticketNumber, String status);
+
+    Result addTicketForHouseKeeping(Room room);
 
 
 }

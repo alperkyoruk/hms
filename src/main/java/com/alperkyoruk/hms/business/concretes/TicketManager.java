@@ -10,6 +10,7 @@ import com.alperkyoruk.hms.dataAccess.StaffDao;
 import com.alperkyoruk.hms.dataAccess.TicketDao;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.CreateTicketDto;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.GetTicketDto;
+import com.alperkyoruk.hms.entities.Room;
 import com.alperkyoruk.hms.entities.Staff;
 import com.alperkyoruk.hms.entities.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class TicketManager implements TicketService {
         SecureRandom secureRandom = new SecureRandom();
         int number = secureRandom.nextInt(90000) + 10000; // 10000 to 99999
         String ticketNumber = departmentLetter  + String.valueOf(number);
+
 
         var guestResponse = guestService.getGuestById(createTicketDto.getGuestId());
 
@@ -78,6 +80,7 @@ public class TicketManager implements TicketService {
                 .resolvedDate(createTicketDto.getResolvedDate())
                 .issue(createTicketDto.getIssue())
                 .staff(selectedStaff)
+                .room(guestResponse.getData().getRoom())
                 .build();
 
         ticketDao.save(ticket);
@@ -265,6 +268,67 @@ public class TicketManager implements TicketService {
         return new SuccessResult(TicketMessages.ticketAssignedSuccessfully);
     }
 
+    @Override
+    public Result changeTicketStatus(String ticketNumber, String status) {
+        var ticketResponse = ticketDao.findByTicketNumber(ticketNumber);
+        if(ticketResponse == null){
+            return new ErrorResult(TicketMessages.ticketNotFound);
+        }
+
+        if(ticketResponse.getStatus().equals(status)){
+            return new ErrorResult(TicketMessages.ticketStatusNotChanged);
+        }
+
+
+        ticketResponse.setStatus(status);
+        if(status.equals("RESOLVED")){
+            ticketResponse.setResolvedDate(new Date());
+        }
+        ticketDao.save(ticketResponse);
+        return new SuccessResult(TicketMessages.ticketStatusUpdatedSuccessfully);
+    }
+
+    @Override
+    public Result addTicketForHouseKeeping(Room room) {
+
+        SecureRandom secureRandom = new SecureRandom();
+        int number = secureRandom.nextInt(90000) + 10000; // 10000 to 99999
+        String ticketNumber = "H"  + String.valueOf(number);
+
+        List<Staff> availableStaff = staffDao.findAllByStatusAndDepartment("ACTIVE", "Housekeeping");
+
+        if(availableStaff.isEmpty()){
+            return new ErrorResult(StaffMessages.StaffNotFound);
+        }
+
+        Map<Staff, Long> staffActiveTicketCounts = availableStaff.stream()
+                .collect(Collectors.toMap(
+                        staff -> staff,
+                        staff -> (long) ticketDao.findAllByStaffAndStatus(staff, "CREATED").size()
+                ));
+
+        Staff selectedStaff = staffActiveTicketCounts.entrySet().stream()
+                .min(Comparator.comparingLong(Map.Entry::getValue))
+                .get()
+                .getKey();
+
+        Ticket ticket = Ticket.builder()
+                .ticketNumber(ticketNumber)
+                .status("CREATED")
+                .category("Housekeeping")
+                .guest(null)
+                .createdDate(new Date())
+                .issue("CLEANING")
+                .description("Room cleaning is requested.")
+                .comment("Room cleaning is requested.")
+                .resolvedDate(null)
+                .staff(selectedStaff)
+                .room(room)
+                .build();
+
+        ticketDao.save(ticket);
+        return new SuccessResult(TicketMessages.ticketAddedSuccessfully);
+    }
 
 
 }

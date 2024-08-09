@@ -5,11 +5,12 @@ import com.alperkyoruk.hms.entities.DTOs.Room.GetRoomDto;
 import java.util.List;
 
 public class RoomMessages {
-    public static String RoomAddedSuccessfully;
-    public static String RoomCouldNotBeFound;
-    public static String RoomDeletedSuccessfully;
-    public static String RoomUpdatedSuccessfully;
-    public static String RoomSuccessfullyBrought;
-    public static String RoomsSuccessfullyBrought;
-    public static String RoomsNotFound;
+    public static String RoomAddedSuccessfully = "Room added successfully";
+    public static String RoomCouldNotBeFound = "Room could not be found";
+    public static String RoomDeletedSuccessfully = "Room deleted successfully";
+    public static String RoomUpdatedSuccessfully = "Room updated successfully";
+    public static String RoomSuccessfullyBrought = "Room brought successfully";
+    public static String RoomsSuccessfullyBrought = "Rooms brought successfully";
+    public static String RoomsNotFound = "Rooms not found";
+    public static String RoomStatusUpdatedSuccessfully = "Room status updated successfully";
 }

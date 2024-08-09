@@ -24,4 +24,8 @@ public interface RoomService {
     DataResult<Room> getRoomById(int id);
     DataResult<Room> getRoomByRoomNumber(int roomNumber);
 
+    Result updateRoomStatus(Room room, String status);
+
+
+
 }

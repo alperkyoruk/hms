@@ -70,5 +70,9 @@ public class GuestController {
         return guestService.getById(id);
     }
 
+    @PostMapping("/checkOut")
+    public Result checkOut(@RequestParam int guestId){
+        return guestService.checkOutGuest(guestId);
+    }
 
 }

@@ -20,4 +20,5 @@ public class CreateTicketDto {
     private String description;
     private String comment;
     private int guestId;
+    private int roomId;
 }

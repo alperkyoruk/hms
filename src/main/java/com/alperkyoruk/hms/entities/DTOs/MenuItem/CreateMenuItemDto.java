@@ -21,7 +21,7 @@ public class CreateMenuItemDto {
     private String ingredients;
     private String allergenInfo;
     private String caloricContent;
-    private LocalTime preparationTime;
+    private int preparationTime;
     private String availableTime;
 
 }

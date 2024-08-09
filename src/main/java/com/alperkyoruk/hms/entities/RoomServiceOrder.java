@@ -1,5 +1,7 @@
 package com.alperkyoruk.hms.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,18 +24,22 @@ public class RoomServiceOrder {
     @Column(name = "id")
     private int id;
 
-    @OneToMany(mappedBy = "roomServiceOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "roomServiceOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<MenuItem> menuItems;
 
     private String status;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date orderDate;
 
-    private LocalTime estimatedTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    private Date estimatedTime;
 
-    private LocalTime orderTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    private Date orderTime;
 
-    private LocalTime deliveryTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    private Date deliveryTime;
 
     private String comment;
 
@@ -41,6 +47,7 @@ public class RoomServiceOrder {
 
     @ManyToOne(targetEntity = Guest.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "guest_id", referencedColumnName = "id")
+    @JsonIgnore
     private Guest guest;
 
     @ManyToOne(targetEntity = Room.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)

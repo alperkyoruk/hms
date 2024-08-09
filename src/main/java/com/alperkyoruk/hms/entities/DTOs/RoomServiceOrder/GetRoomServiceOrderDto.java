@@ -4,6 +4,8 @@ import com.alperkyoruk.hms.entities.DTOs.Guest.GetGuestDto;
 import com.alperkyoruk.hms.entities.DTOs.MenuItem.GetMenuItemDto;
 import com.alperkyoruk.hms.entities.DTOs.Room.GetRoomDto;
 import com.alperkyoruk.hms.entities.RoomServiceOrder;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,12 +22,18 @@ public class GetRoomServiceOrderDto {
     private int id;
     private String status;
     private String comment;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date orderDate;
-    private LocalTime estimatedTime;
-    private LocalTime orderTime;
-    private LocalTime deliveryTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    private Date estimatedTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    private Date orderTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    private Date deliveryTime;
     private double totalPrice;
     private GetRoomDto room;
+
+    @JsonIgnore
     private GetGuestDto guest;
     private List<GetMenuItemDto> menuItems;
 
