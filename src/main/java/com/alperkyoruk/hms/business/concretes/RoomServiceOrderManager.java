@@ -12,6 +12,7 @@ import com.alperkyoruk.hms.entities.DTOs.RoomServiceOrder.GetRoomServiceOrderDto
 import com.alperkyoruk.hms.entities.MenuItem;
 import com.alperkyoruk.hms.entities.RoomServiceOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -199,6 +200,14 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
 
         List<GetRoomServiceOrderDto> returnList = GetRoomServiceOrderDto.buildListGetRoomServiceOrderDto(result);
         return new SuccessDataResult<>(returnList, RoomServiceOrderMessages.roomServiceOrdersSuccessfullyBrought);
+    }
+
+    @Override
+    @Scheduled(cron = "0 0 0 * * ?")
+    //delete all orders that are older than 30 days
+    public void deleteAllByOrderDateBefore() {
+        Date date30DaysAgo = new Date(System.currentTimeMillis() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
+        roomServiceOrderDao.deleteAllByOrderDateBefore(date30DaysAgo);
     }
 
     @Override

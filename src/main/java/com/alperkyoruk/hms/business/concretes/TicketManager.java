@@ -15,6 +15,7 @@ import com.alperkyoruk.hms.entities.Room;
 import com.alperkyoruk.hms.entities.Staff;
 import com.alperkyoruk.hms.entities.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -354,6 +355,14 @@ public class TicketManager implements TicketService {
         roomService.updateRoomStatus(ticketResponse.getRoom(), "ACTIVE");
 
         return new SuccessResult(TicketMessages.ticketStatusUpdatedSuccessfully);
+    }
+
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Override
+    public void deleteAllByResolvedDateBefore() {
+        Date days30Before = new Date(System.currentTimeMillis() - 30 * 24 * 60 * 60 * 1000);
+        ticketDao.deleteAllByResolvedDateBefore(days30Before);
     }
 
 

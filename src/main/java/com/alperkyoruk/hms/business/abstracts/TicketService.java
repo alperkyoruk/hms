@@ -48,4 +48,6 @@ public interface TicketService {
 
     Result cleaningDone(String ticketNumber);
 
+    void deleteAllByResolvedDateBefore();
+
 }

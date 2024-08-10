@@ -34,4 +34,6 @@ public interface TicketDao extends JpaRepository<Ticket, Integer> {
     List<Ticket> findAllByStaffBadgeNumber(String staffBadgeNumber);
 
     List<Ticket> findAllByStaffAndStatus(Staff staff, String status);
+
+    void deleteAllByResolvedDateBefore(Date resolvedDate);
 }
