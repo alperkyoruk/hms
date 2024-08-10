@@ -75,6 +75,10 @@ public class RoomController {
         return roomService.getById(id);
     }
 
+    @PostMapping("/updateRoomStatus")
+    public Result updateRoomStatus(@RequestBody Room room, @RequestParam String status){
+        return roomService.updateRoomStatus(room, status);
+    }
 
 
 }

@@ -159,4 +159,14 @@ public class MenuItemManager implements MenuItemService {
 
         return new SuccessDataResult<>(result, MenuItemMessages.menuItemSuccessfullyBrought);
     }
+
+    @Override
+    public DataResult<List<MenuItem>> getMenuItemsByIds(List<Integer> ids) {
+        var result = menuItemDao.findAllByIdIn(ids);
+        if(result.isEmpty()){
+            return new ErrorDataResult<>(MenuItemMessages.menuItemsNotFound);
+        }
+
+        return new SuccessDataResult<>(result, MenuItemMessages.menuItemsSuccessfullyBrought);
+    }
 }

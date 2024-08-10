@@ -11,4 +11,5 @@ public class RoomServiceOrderMessages {
     public static String roomServiceOrderUpdatedSuccessfully = "Room service order updated successfully";
     public static String roomServiceOrdersSuccessfullyBrought = "Room service orders brought successfully";
     public static String estimatedTimeCalculatedSuccessfully = "Estimated time calculated successfully";
+    public static String menuItemsNotFound;
 }

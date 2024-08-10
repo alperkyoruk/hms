@@ -17,4 +17,6 @@ public interface MenuItemDao extends JpaRepository<MenuItem, Integer> {
     List<MenuItem> findAllByStatus(String status);
 
     List<MenuItem> findAllByRoomServiceOrderId(int roomServiceOrderId);
+
+    List<MenuItem> findAllByIdIn(List<Integer> ids);
 }

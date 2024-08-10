@@ -1,6 +1,7 @@
 package com.alperkyoruk.hms.business.concretes;
 
 import com.alperkyoruk.hms.business.abstracts.GuestService;
+import com.alperkyoruk.hms.business.abstracts.RoomService;
 import com.alperkyoruk.hms.business.abstracts.TicketService;
 import com.alperkyoruk.hms.business.constants.GuestMessages;
 import com.alperkyoruk.hms.business.constants.StaffMessages;
@@ -32,6 +33,9 @@ public class TicketManager implements TicketService {
 
     @Autowired
     private StaffDao staffDao;
+
+    @Autowired
+    RoomService roomService;
 
     @Override
     public Result addTicket(CreateTicketDto createTicketDto) {
@@ -312,11 +316,14 @@ public class TicketManager implements TicketService {
                 .get()
                 .getKey();
 
+        var guest = guestService.getGuestById(2).getData();
+
+
         Ticket ticket = Ticket.builder()
                 .ticketNumber(ticketNumber)
                 .status("CREATED")
                 .category("Housekeeping")
-                .guest(null)
+                .guest(guest)
                 .createdDate(new Date())
                 .issue("CLEANING")
                 .description("Room cleaning is requested.")
@@ -328,6 +335,25 @@ public class TicketManager implements TicketService {
 
         ticketDao.save(ticket);
         return new SuccessResult(TicketMessages.ticketAddedSuccessfully);
+    }
+
+    @Override
+    public Result cleaningDone(String ticketNumber) {
+        var ticketResponse = ticketDao.findByTicketNumber(ticketNumber);
+        if(ticketResponse == null){
+            return new ErrorResult(TicketMessages.ticketNotFound);
+        }
+
+        if(!ticketResponse.getIssue().equals("CLEANING")){
+            return new ErrorResult(TicketMessages.ticketIssueNotCleaning);
+        }
+
+        ticketResponse.setStatus("RESOLVED");
+        ticketResponse.setResolvedDate(new Date());
+        ticketDao.save(ticketResponse);
+        roomService.updateRoomStatus(ticketResponse.getRoom(), "ACTIVE");
+
+        return new SuccessResult(TicketMessages.ticketStatusUpdatedSuccessfully);
     }
 
 

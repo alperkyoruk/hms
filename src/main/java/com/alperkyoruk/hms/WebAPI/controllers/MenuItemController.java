@@ -70,6 +70,10 @@ public class MenuItemController {
         return menuItemService.getById(id);
     }
 
+    @GetMapping("/getMenuItemsByIds")
+    public DataResult<List<MenuItem>> getMenuItemsByIds(@RequestBody List<Integer> ids){
+        return menuItemService.getMenuItemsByIds(ids);
+    }
 
 
 

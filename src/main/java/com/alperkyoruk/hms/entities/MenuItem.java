@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -53,9 +54,13 @@ public class MenuItem {
     @Column(name = "avaliable_time")
     private String availableTime;
 
-    @ManyToOne(targetEntity = RoomServiceOrder.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_service_order_id", referencedColumnName = "id")
-    private RoomServiceOrder roomServiceOrder;
+    @ManyToMany(targetEntity = RoomServiceOrder.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "room_service_order_items",
+            joinColumns = @JoinColumn(name = "menu_item_id"),
+            inverseJoinColumns = @JoinColumn(name = "room_service_order_id")
+    )
+    private List<RoomServiceOrder> roomServiceOrder;
 
     
 

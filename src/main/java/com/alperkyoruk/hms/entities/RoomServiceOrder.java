@@ -24,7 +24,12 @@ public class RoomServiceOrder {
     @Column(name = "id")
     private int id;
 
-    @OneToMany(mappedBy = "roomServiceOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = MenuItem.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "room_service_order_items",
+            joinColumns = @JoinColumn(name = "room_service_order_id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_item_id")
+    )
     private List<MenuItem> menuItems;
 
     private String status;

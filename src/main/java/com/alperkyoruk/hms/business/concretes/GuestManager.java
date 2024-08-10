@@ -196,6 +196,10 @@ public class GuestManager implements GuestService {
             return new ErrorResult(GuestMessages.guestNotFound);
         }
 
+        if(guest.getStatus().equals("CHECKOUT")){
+            return new ErrorResult(GuestMessages.guestAlreadyCheckedOut);
+        }
+
         roomService.updateRoomStatus(guest.getRoom(), "CLEANING");
         ticketService.addTicketForHouseKeeping(guest.getRoom());
         guest.setStatus("CHECKOUT");

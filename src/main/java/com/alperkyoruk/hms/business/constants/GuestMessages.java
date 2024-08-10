@@ -15,4 +15,5 @@ public class GuestMessages {
     public static String roomNotFound = "Room could not be found";
     public static String guestCheckedOut = "Guest checked out successfully";
     public static String roomOccupied = "Room is occupied";
+    public static String guestAlreadyCheckedOut = "Guest is already checked out";
 }

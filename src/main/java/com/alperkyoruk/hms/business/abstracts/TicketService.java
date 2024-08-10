@@ -46,5 +46,6 @@ public interface TicketService {
 
     Result addTicketForHouseKeeping(Room room);
 
+    Result cleaningDone(String ticketNumber);
 
 }

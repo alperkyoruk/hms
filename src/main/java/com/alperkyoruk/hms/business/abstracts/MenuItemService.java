@@ -28,4 +28,6 @@ public interface MenuItemService {
     DataResult<List<GetMenuItemDto>> getMenuItemsByStatus(String status);
 
     DataResult<MenuItem> getMenuItemById(int menuItemId);
+
+    DataResult<List<MenuItem>> getMenuItemsByIds(List<Integer> ids);
  }

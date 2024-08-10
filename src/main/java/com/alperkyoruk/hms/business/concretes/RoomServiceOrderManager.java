@@ -42,11 +42,11 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
     @Override
     public Result addRoomServiceOrder(CreateRoomServiceOrderDto createRoomServiceOrderDto) {
 
-        List<MenuItem> menuItems = createRoomServiceOrderDto.getMenuItemIds().stream()
-                .map(menuItemId -> menuItemService.getMenuItemById(menuItemId).getData())
-                .filter(menuItem -> menuItem != null)
-                .collect(Collectors.toList());
 
+     var menuItemResult = menuItemService.getMenuItemsByIds(createRoomServiceOrderDto.getMenuItemIds());
+        if(!menuItemResult.isSuccess()){
+            return menuItemResult;
+        }
 
 
         var room = roomService.getRoomById(createRoomServiceOrderDto.getRoomId()).getData();
@@ -58,10 +58,10 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
                 .orderTime(new Date())
                 .guest(room.getGuests().getFirst())
                 .comment(createRoomServiceOrderDto.getComment())
-                .menuItems(menuItems)
+                .menuItems(menuItemResult.getData())
                 .room(room)
                 .status(createRoomServiceOrderDto.getStatus())
-                .totalPrice(menuItems.stream().mapToDouble(MenuItem::getPrice).sum())
+                .totalPrice(menuItemResult.getData().stream().mapToDouble(MenuItem::getPrice).sum())
                 .build();
 
         roomServiceOrderDao.save(roomServiceOrder);

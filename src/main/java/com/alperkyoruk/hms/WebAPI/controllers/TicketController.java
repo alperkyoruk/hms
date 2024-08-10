@@ -5,6 +5,7 @@ import com.alperkyoruk.hms.core.result.DataResult;
 import com.alperkyoruk.hms.core.result.Result;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.CreateTicketDto;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.GetTicketDto;
+import com.alperkyoruk.hms.entities.Room;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -95,9 +96,19 @@ public class TicketController {
         return ticketService.assignTicketToStaff(ticketNumber, badgeNumber);
     }
 
+    @PostMapping("/cleaningDone")
+    public Result cleaningDone(@RequestParam String ticketNumber){
+        return ticketService.cleaningDone(ticketNumber);
+    }
+
     @PostMapping("/changeTicketStatus")
     public Result changeTicketStatus(@RequestBody String ticketNumber,@RequestBody String status){
         return ticketService.changeTicketStatus(ticketNumber, status);
+    }
+
+    @PostMapping("/addTicketForHouseKeeping")
+    public Result addTicketForHouseKeeping(@RequestBody Room room){
+        return ticketService.addTicketForHouseKeeping(room);
     }
 
 

@@ -10,4 +10,5 @@ public class TicketMessages {
     public static String ticketAssignedSuccessfully = "Ticket assigned successfully";
     public static String ticketStatusUpdatedSuccessfully = "Ticket status updated successfully";
     public static String ticketStatusNotChanged = "Ticket status not changed";
+    public static String ticketIssueNotCleaning = "Ticket issue is not cleaning";
 }
