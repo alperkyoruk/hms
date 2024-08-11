@@ -39,9 +39,53 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(x ->
                         x
-                                .requestMatchers("/api/auth/generateToken").permitAll()
 
 
+                                .requestMatchers("/api/facilities/addFacility").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/facilities/deleteFacility").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/facilities/updateFacility").hasAnyRole("ADMIN","MODERATOR")
+
+
+                                .requestMatchers("/api/guests/**").hasAnyRole("ADMIN","MODERATOR")
+
+
+                                .requestMatchers("/api/menuItems/addMenuItem").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/menuItems/deleteMenuItem").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/menuItems/updateMenuItem").hasAnyRole("ADMIN","MODERATOR")
+
+
+                                .requestMatchers("/api/reservation/**").hasAnyRole("ADMIN","MODERATOR")
+
+
+                                .requestMatchers("/api/rooms/addRoom").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/rooms/deleteRoom").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/rooms/updateRoom").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/rooms/**").hasAnyRole("ADMIN","MODERATOR","STAFF")
+
+
+                                .requestMatchers("/api/roomServiceOrders/addRoomServiceOrder").hasAnyRole("ADMIN","MODERATOR","STAFF","GUEST")
+                                .requestMatchers("/api/roomServiceOrders/deleteRoomServiceOrder").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/roomServiceOrders/updateRoomServiceOrder").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/roomServiceOrders/**").hasAnyRole("ADMIN","MODERATOR","STAFF")
+
+
+                                .requestMatchers("/api/staff/**").hasAnyRole("ADMIN","MODERATOR")
+
+
+                                .requestMatchers("/api/tickets/addTicket").hasAnyRole("ADMIN","MODERATOR","STAFF","GUEST")
+                                .requestMatchers("/api/tickets/deleteTicket").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/tickets/updateTicket").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/tickets/getTickets").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/tickets/getById").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/tickets/**").hasAnyRole("ADMIN","MODERATOR","STAFF")
+
+
+                                .requestMatchers("/api/users/addUser").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/users/deleteUser").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/users/updateUser").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/users/addModerator").hasAnyRole("ADMIN")
+                                .requestMatchers("/api/users/removeModerator").hasAnyRole("ADMIN")
+                                .requestMatchers("/api/users/**").hasAnyRole("ADMIN","MODERATOR")
 
 
 

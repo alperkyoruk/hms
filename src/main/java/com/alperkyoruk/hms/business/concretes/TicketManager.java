@@ -362,7 +362,12 @@ public class TicketManager implements TicketService {
     @Override
     public void deleteAllByResolvedDateBefore() {
         Date days30Before = new Date(System.currentTimeMillis() - 30 * 24 * 60 * 60 * 1000);
-        ticketDao.deleteAllByResolvedDateBefore(days30Before);
+        var oldTickets = ticketDao.findAllByResolvedDateBefore(days30Before);
+        if(oldTickets.isEmpty()){
+            return;
+        }
+
+        ticketDao.deleteAll(oldTickets);
     }
 
 

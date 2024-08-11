@@ -207,7 +207,12 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
     //delete all orders that are older than 30 days
     public void deleteAllByOrderDateBefore() {
         Date date30DaysAgo = new Date(System.currentTimeMillis() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
-        roomServiceOrderDao.deleteAllByOrderDateBefore(date30DaysAgo);
+
+        var pastOrders = roomServiceOrderDao.findAllByOrderDate(date30DaysAgo);
+        if(pastOrders.isEmpty()){
+            return;
+        }
+        roomServiceOrderDao.deleteAll(pastOrders);
     }
 
     @Override

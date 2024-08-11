@@ -5,13 +5,11 @@ import com.alperkyoruk.hms.core.result.DataResult;
 import com.alperkyoruk.hms.core.result.ErrorDataResult;
 import com.alperkyoruk.hms.core.result.SuccessDataResult;
 import com.alperkyoruk.hms.core.security.JwtService;
+import com.alperkyoruk.hms.entities.DTOs.Auth.AuthRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -29,10 +27,10 @@ public class AuthController {
 
 
     @PostMapping("/generateToken")
-    public DataResult<String> generateToken(@RequestParam String username, @RequestParam String password) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+    public DataResult<String> generateToken(@RequestBody AuthRequest authRequest) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
-            return new SuccessDataResult<String>(jwtService.generateToken(username), "Token generated successfully");
+            return new SuccessDataResult<String>(jwtService.generateToken(authRequest.getUsername()), "Token generated successfully");
         }
         return new ErrorDataResult<>("Invalid username or password");
     }
