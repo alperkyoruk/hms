@@ -66,6 +66,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/roomServiceOrders/addRoomServiceOrder").hasAnyRole("ADMIN","MODERATOR","STAFF","GUEST")
                                 .requestMatchers("/api/roomServiceOrders/deleteRoomServiceOrder").hasAnyRole("ADMIN","MODERATOR")
                                 .requestMatchers("/api/roomServiceOrders/updateRoomServiceOrder").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/roomServiceOrders/getOrdersByGuest").hasAnyRole("ADMIN","MODERATOR","STAFF","GUEST")
                                 .requestMatchers("/api/roomServiceOrders/**").hasAnyRole("ADMIN","MODERATOR","STAFF")
 
 
@@ -77,6 +78,8 @@ public class SecurityConfig {
                                 .requestMatchers("/api/tickets/updateTicket").hasAnyRole("ADMIN","MODERATOR")
                                 .requestMatchers("/api/tickets/getTickets").hasAnyRole("ADMIN","MODERATOR")
                                 .requestMatchers("/api/tickets/getById").hasAnyRole("ADMIN","MODERATOR")
+                                .requestMatchers("/api/tickets/getTicketsByGuest").hasAnyRole("ADMIN","MODERATOR","STAFF","GUEST")
+                                .requestMatchers("/api/tickets/getTicketsByStaff").hasAnyRole("ADMIN","MODERATOR","STAFF")
                                 .requestMatchers("/api/tickets/**").hasAnyRole("ADMIN","MODERATOR","STAFF")
 
 

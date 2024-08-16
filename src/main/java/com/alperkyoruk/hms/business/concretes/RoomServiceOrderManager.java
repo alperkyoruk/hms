@@ -1,9 +1,11 @@
 package com.alperkyoruk.hms.business.concretes;
 
+import com.alperkyoruk.hms.business.abstracts.GuestService;
 import com.alperkyoruk.hms.business.abstracts.MenuItemService;
 import com.alperkyoruk.hms.business.abstracts.RoomService;
 import com.alperkyoruk.hms.business.abstracts.RoomServiceOrderService;
 import com.alperkyoruk.hms.business.constants.GuestMessages;
+import com.alperkyoruk.hms.business.constants.RoomMessages;
 import com.alperkyoruk.hms.business.constants.RoomServiceOrderMessages;
 import com.alperkyoruk.hms.core.result.*;
 import com.alperkyoruk.hms.dataAccess.RoomServiceOrderDao;
@@ -11,35 +13,39 @@ import com.alperkyoruk.hms.entities.DTOs.RoomServiceOrder.CreateRoomServiceOrder
 import com.alperkyoruk.hms.entities.DTOs.RoomServiceOrder.GetRoomServiceOrderDto;
 import com.alperkyoruk.hms.entities.MenuItem;
 import com.alperkyoruk.hms.entities.RoomServiceOrder;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class RoomServiceOrderManager implements RoomServiceOrderService {
 
 
-    @Autowired
+
     private RoomServiceOrderDao roomServiceOrderDao;
 
-    @Autowired
+
     private MenuItemService menuItemService;
 
-    @Autowired
+
     private RoomService roomService;
 
-    public RoomServiceOrderManager(RoomServiceOrderDao roomServiceOrderDao, MenuItemService menuItemService, RoomService roomService) {
+    private GuestService guestService;
+
+    public RoomServiceOrderManager(RoomServiceOrderDao roomServiceOrderDao, MenuItemService menuItemService, RoomService roomService, @Lazy GuestService guestService) {
         this.roomServiceOrderDao = roomServiceOrderDao;
         this.menuItemService = menuItemService;
         this.roomService = roomService;
+        this.guestService = guestService;
     }
+
+
     @Override
     public Result addRoomServiceOrder(CreateRoomServiceOrderDto createRoomServiceOrderDto) {
 
@@ -49,15 +55,29 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
             return menuItemResult;
         }
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
 
-        var room = roomService.getRoomById(createRoomServiceOrderDto.getRoomId()).getData();
+        var guest = guestService.getGuestByEmail(currentUser);
+        if(!guest.isSuccess()){
+            return new ErrorResult(GuestMessages.guestNotFound);
+        }
+
+        var room = guest.getData().getRoom();
+        if(room == null){
+            return new ErrorResult(RoomMessages.RoomsNotFound);
+        }
+
+
+
+
 
 
 
         RoomServiceOrder roomServiceOrder = RoomServiceOrder.builder()
                 .orderDate(new Date())
                 .orderTime(new Date())
-                .guest(room.getGuests().getFirst())
+                .guest(guest.getData())
                 .comment(createRoomServiceOrderDto.getComment())
                 .menuItems(menuItemResult.getData())
                 .room(room)
@@ -88,10 +108,13 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
             return new ErrorResult(RoomServiceOrderMessages.roomServiceOrdersNotFound);
         }
 
-        var guest = roomService.getRoomById(getRoomServiceOrderDto.getId()).getData().getReservation().getGuests();
-        if(guest == null){
-            return new ErrorResult(GuestMessages.guestNotFound);
+        var room = roomService.getRoomByRoomNumber(getRoomServiceOrderDto.getRoomNumber());
+        if(room == null){
+            return new ErrorResult(RoomMessages.RoomsNotFound);
         }
+
+        var guest = result.getGuest();
+
 
 
 
@@ -101,8 +124,7 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
         result.setOrderDate(getRoomServiceOrderDto.getOrderDate() == null ? result.getOrderDate() : getRoomServiceOrderDto.getOrderDate());
         result.setStatus(getRoomServiceOrderDto.getStatus() == null ? result.getStatus() : getRoomServiceOrderDto.getStatus());
         result.setTotalPrice(getRoomServiceOrderDto.getTotalPrice() == 0 ? result.getTotalPrice() : getRoomServiceOrderDto.getTotalPrice());
-        result.setRoom(roomService.getRoomById(getRoomServiceOrderDto.getRoom().getId()).getData());
-        result.setGuest(guest.getFirst());
+        result.setGuest(guest == null ? result.getGuest() : guest);
 
 
         roomServiceOrderDao.save(result);
@@ -199,6 +221,21 @@ public class RoomServiceOrderManager implements RoomServiceOrderService {
         }
 
         List<GetRoomServiceOrderDto> returnList = GetRoomServiceOrderDto.buildListGetRoomServiceOrderDto(result);
+        return new SuccessDataResult<>(returnList, RoomServiceOrderMessages.roomServiceOrdersSuccessfullyBrought);
+    }
+
+    @Override
+    public DataResult<List<GetRoomServiceOrderDto>> getAllByGuest() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+
+        var orders = roomServiceOrderDao.findAllByGuestEmail(currentUser);
+        if(orders.isEmpty()){
+            return new ErrorDataResult<>(RoomServiceOrderMessages.roomServiceOrdersNotFound);
+        }
+
+        List<GetRoomServiceOrderDto> returnList = GetRoomServiceOrderDto.buildListGetRoomServiceOrderDto(orders);
         return new SuccessDataResult<>(returnList, RoomServiceOrderMessages.roomServiceOrdersSuccessfullyBrought);
     }
 

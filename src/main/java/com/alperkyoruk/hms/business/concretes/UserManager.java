@@ -155,6 +155,19 @@ public class UserManager implements UserService {
     }
 
     @Override
+    public Result addGuest(String email, String phoneNumber) {
+        var user = User.builder()
+                .username(email)
+                .password(passwordEncoder.encode(phoneNumber))
+                .email(email)
+                .authorities(Set.of(Role.ROLE_GUEST))
+                .build();
+
+        userDao.save(user);
+        return new SuccessResult(UserMessages.UserAddedSuccessfully);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = getUserByUsername(username).getData();
         return user;

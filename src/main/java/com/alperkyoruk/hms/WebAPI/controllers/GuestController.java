@@ -55,9 +55,9 @@ public class GuestController {
         return guestService.getGuestByPhoneNumber(phoneNumber);
     }
 
-    @GetMapping("/getGuestByEmail")
-    public DataResult<GetGuestDto> getGuestByEmail(@RequestParam String email){
-        return guestService.getGuestByEmail(email);
+    @GetMapping("/getGuestDtoByEmail")
+    public DataResult<GetGuestDto> getGuestDtoByEmail(@RequestParam String email){
+        return guestService.getGuestDtoByEmail(email);
     }
 
     @GetMapping("/getGuestByPassportNumber")
@@ -73,6 +73,16 @@ public class GuestController {
     @PostMapping("/checkOut")
     public Result checkOut(@RequestParam int guestId){
         return guestService.checkOutGuest(guestId);
+    }
+
+    @GetMapping("/getGuestsByStatus")
+    public DataResult<List<GetGuestDto>> getGuestsByStatus(@RequestParam String status){
+        return guestService.getGuestsByStatus(status);
+    }
+
+    @GetMapping("/getGuestByEmail")
+    public DataResult<Guest> getGuestByEmail(@RequestParam String email){
+        return guestService.getGuestByEmail(email);
     }
 
 }

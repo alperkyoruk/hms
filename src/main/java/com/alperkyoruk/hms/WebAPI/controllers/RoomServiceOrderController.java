@@ -78,5 +78,10 @@ public class RoomServiceOrderController {
         return roomServiceOrderService.getAllByOrderTimeAfter(time);
     }
 
+    @GetMapping("/getOrdersByGuest")
+    public DataResult<List<GetRoomServiceOrderDto>> getOrdersByGuest(){
+        return roomServiceOrderService.getAllByGuest();
+    }
+
 
 }

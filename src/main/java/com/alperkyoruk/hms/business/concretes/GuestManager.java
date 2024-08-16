@@ -3,6 +3,7 @@ package com.alperkyoruk.hms.business.concretes;
 import com.alperkyoruk.hms.business.abstracts.GuestService;
 import com.alperkyoruk.hms.business.abstracts.RoomService;
 import com.alperkyoruk.hms.business.abstracts.TicketService;
+import com.alperkyoruk.hms.business.abstracts.UserService;
 import com.alperkyoruk.hms.business.constants.GuestMessages;
 import com.alperkyoruk.hms.core.result.*;
 import com.alperkyoruk.hms.dataAccess.GuestDao;
@@ -21,12 +22,15 @@ public class GuestManager implements GuestService {
     private GuestDao guestDao;
     private RoomService roomService;
     private TicketService ticketService;
+    private UserService userService;
 
-    public GuestManager(GuestDao guestDao, RoomService roomService, @Lazy TicketService ticketService) {
+    public GuestManager(GuestDao guestDao, RoomService roomService, @Lazy TicketService ticketService, @Lazy UserService userService) {
         this.guestDao = guestDao;
         this.roomService = roomService;
         this.ticketService = ticketService;
+        this.userService = userService;
     }
+
 
     @Override
     public Result addGuest(CreateGuestDto createGuestDto) {
@@ -46,6 +50,7 @@ public class GuestManager implements GuestService {
                 .dateOfBirth(createGuestDto.getDateOfBirth())
                 .checkInDate(createGuestDto.getCheckInDate())
                 .checkOutDate(createGuestDto.getCheckOutDate())
+                .status("ACTIVE")
                 .vipStatus(createGuestDto.getVipStatus())
                 .loyaltyCardNumber(createGuestDto.getLoyaltyCardNumber())
                 .sex(createGuestDto.getSex())
@@ -54,6 +59,7 @@ public class GuestManager implements GuestService {
                 .build();
 
         guestDao.save(guest);
+        userService.addGuest(guest.getEmail(), guest.getPhoneNumber());
         roomService.updateRoomStatus(room, "OCCUPIED");
         return new SuccessResult(GuestMessages.guestAdded);
     }
@@ -81,7 +87,7 @@ public class GuestManager implements GuestService {
         }
 
         var room = roomService.getRoomByRoomNumber(getGuestDto.getRoomNumber()).getData();
-        if(room == null){
+        if(room == null && getGuestDto.getRoomNumber() != 0){
              return new ErrorResult(GuestMessages.roomNotFound);
          }
 
@@ -100,6 +106,7 @@ public class GuestManager implements GuestService {
         guestResponse.setDateOfBirth(getGuestDto.getDateOfBirth() == null ? guestResponse.getDateOfBirth() : getGuestDto.getDateOfBirth());
         guestResponse.setRoom(room);
 
+        guestDao.save(guestResponse);
         return new SuccessResult(GuestMessages.guestUpdated);
     }
 
@@ -155,7 +162,7 @@ public class GuestManager implements GuestService {
     }
 
     @Override
-    public DataResult<GetGuestDto> getGuestByEmail(String email) {
+    public DataResult<GetGuestDto> getGuestDtoByEmail(String email) {
         var guest = guestDao.findByEmail(email);
 
         if(guest == null){
@@ -202,8 +209,30 @@ public class GuestManager implements GuestService {
 
         roomService.updateRoomStatus(guest.getRoom(), "CLEANING");
         ticketService.addTicketForHouseKeeping(guest.getRoom());
+        guest.setRoom(null);
         guest.setStatus("CHECKOUT");
         guestDao.save(guest);
         return new SuccessResult(GuestMessages.guestCheckedOut);
+    }
+
+    @Override
+    public DataResult<List<GetGuestDto>> getGuestsByStatus(String status) {
+        var result = guestDao.findAllByStatus(status);
+        if(result == null){
+            return new ErrorDataResult<>(GuestMessages.guestsNotFound);
+        }
+
+        List<GetGuestDto> returnList = new GetGuestDto().buildListGetGuestDto(result);
+        return new SuccessDataResult<>(returnList, GuestMessages.guestsSuccessfullyBrought);
+    }
+
+    @Override
+    public DataResult<Guest> getGuestByEmail(String email) {
+        var result = guestDao.findByEmail(email);
+        if(result == null){
+            return new ErrorDataResult<>(GuestMessages.guestNotFound);
+        }
+
+        return new SuccessDataResult<>(result,GuestMessages.guestSuccessfullyBrought);
     }
 }

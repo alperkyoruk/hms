@@ -1,5 +1,6 @@
 package com.alperkyoruk.hms.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,11 +46,13 @@ public class Facility {
     @Column(name = "location")
     private String location;
 
+    @JsonFormat(pattern = "HH:mm")
     @Column(name = "opening_hours")
-    private LocalTime openingHours;
+    private Date openingHours;
 
+    @JsonFormat(pattern = "HH:mm")
     @Column(name = "closing_hours")
-    private LocalTime closingHours;
+    private Date closingHours;
 
     @Column(name = "contact_details")
     private String contactDetails;

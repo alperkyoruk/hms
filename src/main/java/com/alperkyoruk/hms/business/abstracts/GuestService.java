@@ -24,13 +24,17 @@ public interface GuestService {
 
     DataResult<GetGuestDto> getGuestByPhoneNumber(String phoneNumber);
 
-    DataResult<GetGuestDto> getGuestByEmail(String email);
+    DataResult<GetGuestDto> getGuestDtoByEmail(String email);
 
     DataResult<GetGuestDto> getGuestByPassportNumber(String passportNumber);
 
     DataResult<Guest> getGuestById(int id);
 
     Result checkOutGuest(int guestId);
+
+    DataResult<List<GetGuestDto>> getGuestsByStatus(String status);
+
+    DataResult<Guest> getGuestByEmail(String email);
 
 
 

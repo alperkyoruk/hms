@@ -16,6 +16,8 @@ import com.alperkyoruk.hms.entities.Staff;
 import com.alperkyoruk.hms.entities.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -47,8 +49,10 @@ public class TicketManager implements TicketService {
         int number = secureRandom.nextInt(90000) + 10000; // 10000 to 99999
         String ticketNumber = departmentLetter  + String.valueOf(number);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserMail = authentication.getName();
 
-        var guestResponse = guestService.getGuestById(createTicketDto.getGuestId());
+        var guestResponse = guestService.getGuestByEmail(currentUserMail);
 
         if(guestResponse.getData() == null){
             return new ErrorResult(GuestMessages.guestNotFound);
@@ -75,7 +79,7 @@ public class TicketManager implements TicketService {
 
         Ticket ticket = Ticket.builder()
                 .ticketNumber(ticketNumber)
-                .status(createTicketDto.getStatus())
+                .status("ACTIVE")
                 .category(createTicketDto.getCategory())
                 .guest(guestResponse.getData())
                 .createdDate(new Date())
@@ -284,6 +288,8 @@ public class TicketManager implements TicketService {
             return new ErrorResult(TicketMessages.ticketStatusNotChanged);
         }
 
+        System.out.println(ticketResponse.getStatus());
+
 
         ticketResponse.setStatus(status);
         if(status.equals("RESOLVED")){
@@ -368,6 +374,44 @@ public class TicketManager implements TicketService {
         }
 
         ticketDao.deleteAll(oldTickets);
+    }
+
+    @Override
+    public DataResult<List<GetTicketDto>> getAllByGuest() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserMail = authentication.getName();
+
+        var guestResponse = guestService.getGuestByEmail(currentUserMail);
+        if(guestResponse.getData() == null){
+            return new ErrorDataResult<>(GuestMessages.guestNotFound);
+        }
+
+        var ticketResponse = ticketDao.findAllByGuestEmail(currentUserMail);
+        if(ticketResponse.isEmpty()){
+            return new ErrorDataResult<>(TicketMessages.ticketNotFound);
+        }
+
+        List<GetTicketDto> returnList = GetTicketDto.buildListGetTicketDto(ticketResponse);
+        return new SuccessDataResult<>(returnList, TicketMessages.ticketsSuccessfullyBrought);
+    }
+
+    @Override
+    public DataResult<List<GetTicketDto>> getAllByStaff() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentStaff = authentication.getName();
+
+        var staffResponse = staffDao.findByBadgeNumber(currentStaff);
+        if(staffResponse == null){
+            return new ErrorDataResult<>(StaffMessages.StaffNotFound);
+        }
+
+        var ticketResponse = ticketDao.findAllByStaffBadgeNumber(currentStaff);
+        if(ticketResponse.isEmpty()){
+            return new ErrorDataResult<>(TicketMessages.ticketNotFound);
+        }
+
+        List<GetTicketDto> returnList = GetTicketDto.buildListGetTicketDto(ticketResponse);
+        return new SuccessDataResult<>(returnList, TicketMessages.ticketsSuccessfullyBrought);
     }
 
 

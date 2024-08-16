@@ -102,13 +102,28 @@ public class TicketController {
     }
 
     @PostMapping("/changeTicketStatus")
-    public Result changeTicketStatus(@RequestBody String ticketNumber,@RequestBody String status){
+    public Result changeTicketStatus(@RequestParam String ticketNumber,@RequestParam String status){
         return ticketService.changeTicketStatus(ticketNumber, status);
     }
 
     @PostMapping("/addTicketForHouseKeeping")
     public Result addTicketForHouseKeeping(@RequestBody Room room){
         return ticketService.addTicketForHouseKeeping(room);
+    }
+
+    @GetMapping("/getTicketsByStatus")
+    public DataResult<List<GetTicketDto>> getTicketsByStatus(@RequestParam String status){
+        return ticketService.getAllByStatus(status);
+    }
+
+    @GetMapping("/getTicketsByGuest")
+    public DataResult<List<GetTicketDto>> getTicketsByGuest(){
+        return ticketService.getAllByGuest();
+    }
+
+    @GetMapping("/getTicketsByStaff")
+    public DataResult<List<GetTicketDto>> getTicketsByStaff(){
+        return ticketService.getAllByStaff();
     }
 
 

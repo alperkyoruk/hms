@@ -47,8 +47,7 @@ public class Room {
     @JsonIgnore
     private Reservation reservation;
 
-    @OneToMany(targetEntity = Guest.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id", referencedColumnName = "id")
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Guest> guests;
 

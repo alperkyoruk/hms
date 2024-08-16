@@ -23,5 +23,7 @@ public interface RoomServiceOrderDao extends JpaRepository<RoomServiceOrder, Int
 
     List<RoomServiceOrder> findAllByOrderDate(Date date);
 
+    List<RoomServiceOrder> findAllByGuestEmail(String email);
+
     void deleteAllByOrderDateBefore(Date date);
 }

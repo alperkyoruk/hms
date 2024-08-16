@@ -1,6 +1,7 @@
 package com.alperkyoruk.hms.entities.DTOs.Guest;
 
 import com.alperkyoruk.hms.entities.Guest;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,8 +32,10 @@ public class GetGuestDto {
 
         private String passportNumber;
 
+        @JsonFormat(pattern = "yyyy-MM-dd-HH:mm")
         private Date checkInDate;
 
+        @JsonFormat(pattern = "yyyy-MM-dd-HH:mm")
         private Date checkOutDate;
 
         private String vipStatus;

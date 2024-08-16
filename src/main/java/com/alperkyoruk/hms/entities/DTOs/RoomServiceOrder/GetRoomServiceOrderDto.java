@@ -31,7 +31,7 @@ public class GetRoomServiceOrderDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private Date deliveryTime;
     private double totalPrice;
-    private GetRoomDto room;
+    private int roomNumber;
 
     @JsonIgnore
     private GetGuestDto guest;
@@ -46,7 +46,7 @@ public class GetRoomServiceOrderDto {
         this.orderTime = roomServiceOrder.getOrderTime();
         this.deliveryTime = roomServiceOrder.getDeliveryTime();
         this.totalPrice = roomServiceOrder.getTotalPrice();
-        this.room = new GetRoomDto(roomServiceOrder.getRoom());
+        this.roomNumber = new GetRoomDto(roomServiceOrder.getRoom()).getRoomNumber();
         this.guest = new GetGuestDto(roomServiceOrder.getGuest());
         this.menuItems = GetMenuItemDto.buildListGetMenuItemDto(roomServiceOrder.getMenuItems());
     }

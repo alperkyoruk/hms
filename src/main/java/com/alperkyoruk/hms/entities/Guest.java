@@ -58,7 +58,7 @@ public class Guest {
     @Column(name = "status")
     private String status;
 
-    @OneToOne
+    @ManyToOne(targetEntity = Room.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private Room room;
 

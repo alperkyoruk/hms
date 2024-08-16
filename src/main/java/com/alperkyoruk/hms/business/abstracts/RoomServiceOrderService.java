@@ -36,5 +36,7 @@ public interface RoomServiceOrderService {
 
     DataResult<List<GetRoomServiceOrderDto>> getAllByDate(Date date);
 
+    DataResult<List<GetRoomServiceOrderDto>> getAllByGuest();
+
     void deleteAllByOrderDateBefore();
 }

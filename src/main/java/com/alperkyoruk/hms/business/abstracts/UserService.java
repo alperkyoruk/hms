@@ -32,6 +32,8 @@ public interface UserService extends UserDetailsService {
 
     Result removeStaff(int userId);
 
+    Result addGuest(String email, String phoneNumber);
+
 
 
 

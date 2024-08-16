@@ -50,4 +50,8 @@ public interface TicketService {
 
     void deleteAllByResolvedDateBefore();
 
+    DataResult<List<GetTicketDto>> getAllByGuest();
+
+    DataResult<List<GetTicketDto>> getAllByStaff();
+
 }

@@ -31,6 +31,8 @@ public interface GuestDao extends JpaRepository<Guest, Integer> {
 
     List<Guest> findAllByCheckOutDate(Date checkOutDate);
 
+    List<Guest> findAllByStatus(String status);
+
 
 
 }

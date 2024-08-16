@@ -1,6 +1,7 @@
 package com.alperkyoruk.hms.entities.DTOs.Facility;
 
 import com.alperkyoruk.hms.entities.Facility;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +26,13 @@ public class GetFacilityDto {
     private String facilityType;
     private boolean reservationRequired;
     private String location;
-    private LocalTime openingHours;
-    private LocalTime closingHours;
+
+    @JsonFormat(pattern = "HH:mm")
+    private Date openingHours;
+
+    @JsonFormat(pattern = "HH:mm")
+    private Date closingHours;
+
     private String contactDetails;
     private int usageCount;
 

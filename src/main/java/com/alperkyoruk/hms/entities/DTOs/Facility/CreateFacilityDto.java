@@ -1,11 +1,13 @@
 package com.alperkyoruk.hms.entities.DTOs.Facility;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,9 +31,11 @@ public class CreateFacilityDto {
 
         private String location;
 
-        private LocalTime openingHours;
+        @JsonFormat(pattern = "HH:mm")
+        private Date openingHours;
 
-        private LocalTime closingHours;
+        @JsonFormat(pattern = "HH:mm")
+        private Date closingHours;
 
         private String contactDetails;
 
