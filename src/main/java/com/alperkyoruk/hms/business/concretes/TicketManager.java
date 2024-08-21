@@ -11,6 +11,7 @@ import com.alperkyoruk.hms.dataAccess.StaffDao;
 import com.alperkyoruk.hms.dataAccess.TicketDao;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.CreateTicketDto;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.GetTicketDto;
+import com.alperkyoruk.hms.entities.DTOs.Ticket.TicketStatusDto;
 import com.alperkyoruk.hms.entities.Room;
 import com.alperkyoruk.hms.entities.Staff;
 import com.alperkyoruk.hms.entities.Ticket;
@@ -278,23 +279,22 @@ public class TicketManager implements TicketService {
     }
 
     @Override
-    public Result changeTicketStatus(String ticketNumber, String status) {
-        var ticketResponse = ticketDao.findByTicketNumber(ticketNumber);
+    public Result changeTicketStatus(TicketStatusDto ticketStatusDto) {
+        var ticketResponse = ticketDao.findByTicketNumber(ticketStatusDto.getTicketNumber());
         if(ticketResponse == null){
             return new ErrorResult(TicketMessages.ticketNotFound);
         }
 
-        if(ticketResponse.getStatus().equals(status)){
+        if(ticketResponse.getStatus().equals(ticketStatusDto.getStatus())){
             return new ErrorResult(TicketMessages.ticketStatusNotChanged);
         }
 
-        System.out.println(ticketResponse.getStatus());
 
-
-        ticketResponse.setStatus(status);
-        if(status.equals("RESOLVED")){
+        ticketResponse.setStatus(ticketStatusDto.getStatus());
+        if(ticketStatusDto.getStatus().equals("RESOLVED")){
             ticketResponse.setResolvedDate(new Date());
         }
+        ticketResponse.setComment(ticketStatusDto.getComment());
         ticketDao.save(ticketResponse);
         return new SuccessResult(TicketMessages.ticketStatusUpdatedSuccessfully);
     }

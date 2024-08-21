@@ -5,6 +5,7 @@ import com.alperkyoruk.hms.core.result.DataResult;
 import com.alperkyoruk.hms.core.result.Result;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.CreateTicketDto;
 import com.alperkyoruk.hms.entities.DTOs.Ticket.GetTicketDto;
+import com.alperkyoruk.hms.entities.DTOs.Ticket.TicketStatusDto;
 import com.alperkyoruk.hms.entities.Room;
 import org.springframework.web.bind.annotation.*;
 
@@ -102,8 +103,8 @@ public class TicketController {
     }
 
     @PostMapping("/changeTicketStatus")
-    public Result changeTicketStatus(@RequestParam String ticketNumber,@RequestParam String status){
-        return ticketService.changeTicketStatus(ticketNumber, status);
+    public Result changeTicketStatus(@RequestBody TicketStatusDto ticketStatusDto){
+        return ticketService.changeTicketStatus(ticketStatusDto);
     }
 
     @PostMapping("/addTicketForHouseKeeping")

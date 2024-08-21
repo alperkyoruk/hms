@@ -31,7 +31,7 @@ public class MetricManager implements MetricService {
         var totalRoomCount = rooms.size();
         var maxGuestCount = rooms.stream().mapToInt(GetRoomDto::getRoomCapacity).sum();
         var availableRoomCount = (int) rooms.stream().filter(room -> room.getRoomStatus().equals("ACTIVE")).count();
-        double occupancyRate = (((double) activeGuestCount / maxGuestCount) * 100);
+        double occupancyRate = (((double) (totalRoomCount - availableRoomCount) / totalRoomCount) * 100);
 
         GetMetricsDto getMetricsDto = new GetMetricsDto();
         getMetricsDto.setGuestCount(guestCount);
